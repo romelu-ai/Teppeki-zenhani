@@ -3,567 +3,663 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>鉄壁 単語帳 2176語</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>鉄壁 単語帳</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Lora:ital,wght@0,700;1,400&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0e0e12;
-    --surface: #16161e;
-    --card: #1c1c28;
-    --card2: #222233;
-    --border: #2e2e42;
-    --accent: #7c6af7;
-    --accent2: #c084fc;
-    --gold: #f5c842;
-    --text: #e8e8f0;
-    --muted: #7878a0;
-    --green: #4ade80;
-    --red: #f87171;
-  }
-
-- { box-sizing: border-box; margin: 0; padding: 0; }
-
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
 body {
-background: var(–bg);
-color: var(–text);
-font-family: ‘Noto Serif JP’, serif;
-min-height: 100vh;
-line-height: 1.6;
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #0f1117;
+  color: #dde1f0;
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* ===== VARIABLES ===== */
+:root {
+–bg: #0f1117;
+–bg2: #161a27;
+–card: #1c2035;
+–card-hover: #222742;
+–border: #2e3450;
+–border2: #3a4060;
+–text: #dde1f0;
+–muted: #6b748a;
+–muted2: #8892aa;
+–accent: #6c8fff;
+–accent-dim: rgba(108,143,255,0.15);
+–gold: #f0b429;
+–gold-dim: rgba(240,180,41,0.15);
+–green: #3dd68c;
+–green-dim: rgba(61,214,140,0.12);
+–green-border: rgba(61,214,140,0.35);
+–red: #ff6b7a;
+–red-dim: rgba(255,107,122,0.12);
+–red-border: rgba(255,107,122,0.35);
+–purple: #b57bee;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(–bg); }
+::-webkit-scrollbar-thumb { background: var(–border2); border-radius: 3px; }
+
 /* ===== HEADER ===== */
-.header {
-background: linear-gradient(135deg, #111118 0%, #1a1a2e 50%, #111118 100%);
-border-bottom: 1px solid var(–border);
-padding: 20px 24px;
+#header {
 position: sticky;
 top: 0;
 z-index: 100;
-backdrop-filter: blur(10px);
-}
-
-.header-inner {
-max-width: 900px;
-margin: 0 auto;
+background: rgba(15,17,23,0.96);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border-bottom: 1px solid var(–border);
+padding: 0 20px;
+height: 56px;
 display: flex;
 align-items: center;
-gap: 16px;
-flex-wrap: wrap;
+gap: 14px;
 }
-
 .logo {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.5rem;
+font-family: ‘Lora’, serif;
+font-size: 1.2rem;
 font-weight: 700;
 color: var(–gold);
-letter-spacing: 0.02em;
 white-space: nowrap;
+flex-shrink: 0;
 }
-
-.logo span {
+.logo i {
 font-style: italic;
-color: var(–accent2);
-font-size: 0.9em;
-}
-
-.header-stats {
-display: flex;
-gap: 12px;
-margin-left: auto;
-flex-wrap: wrap;
-}
-
-.stat-pill {
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 20px;
-padding: 4px 12px;
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 0.75rem;
-color: var(–muted);
-white-space: nowrap;
-}
-
-.stat-pill strong {
 color: var(–accent);
+font-size: 0.85em;
+margin-left: 4px;
 }
-
-/* ===== CONTROLS ===== */
-.controls {
-max-width: 900px;
-margin: 0 auto;
-padding: 20px 24px;
-display: flex;
-flex-wrap: wrap;
-gap: 12px;
-align-items: center;
-}
-
-.search-wrap {
-position: relative;
-flex: 1;
-min-width: 200px;
-}
-
-.search-icon {
-position: absolute;
-left: 12px;
-top: 50%;
-transform: translateY(-50%);
-color: var(–muted);
-font-size: 1rem;
-pointer-events: none;
-}
-
-input[type=“text”] {
-width: 100%;
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 10px 12px 10px 36px;
-color: var(–text);
-font-family: ‘Noto Serif JP’, serif;
-font-size: 0.9rem;
-outline: none;
-transition: border-color 0.2s;
-}
-
-input[type=“text”]:focus {
-border-color: var(–accent);
-}
-
-input[type=“text”]::placeholder { color: var(–muted); }
-
-select {
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 10px 12px;
-color: var(–text);
-font-family: ‘Noto Serif JP’, serif;
-font-size: 0.85rem;
-outline: none;
-cursor: pointer;
-transition: border-color 0.2s;
-}
-
-select:focus { border-color: var(–accent); }
-
-.btn {
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 10px 16px;
-color: var(–text);
-font-family: ‘Noto Serif JP’, serif;
-font-size: 0.85rem;
-cursor: pointer;
-transition: all 0.2s;
-white-space: nowrap;
-}
-
-.btn:hover { border-color: var(–accent); color: var(–accent); }
-
-.btn.active {
-background: var(–accent);
-border-color: var(–accent);
-color: white;
-}
-
-.btn-gold {
-background: linear-gradient(135deg, #c8972a, #f5c842);
-border-color: #f5c842;
-color: #1a1200;
-font-weight: 600;
-}
-
-.btn-gold:hover {
-opacity: 0.9;
-color: #1a1200;
-}
-
-/* ===== FLASH CARD MODE ===== */
-#flashcard-mode {
-display: none;
-max-width: 700px;
-margin: 0 auto;
-padding: 24px;
-flex-direction: column;
-align-items: center;
-gap: 20px;
-}
-
-#flashcard-mode.visible { display: flex; }
-
-.fc-progress-bar {
-width: 100%;
-height: 4px;
-background: var(–border);
-border-radius: 2px;
-overflow: hidden;
-}
-
-.fc-progress-fill {
-height: 100%;
-background: linear-gradient(90deg, var(–accent), var(–accent2));
-border-radius: 2px;
-transition: width 0.3s ease;
-}
-
-.fc-counter {
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 0.85rem;
-color: var(–muted);
-}
-
-.fc-card {
-width: 100%;
-min-height: 240px;
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 16px;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-cursor: pointer;
-padding: 40px 32px;
-text-align: center;
-transition: transform 0.15s ease, border-color 0.2s;
-position: relative;
-user-select: none;
-}
-
-.fc-card:hover { transform: translateY(-2px); border-color: var(–accent); }
-
-.fc-num {
-position: absolute;
-top: 14px;
-left: 18px;
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 0.7rem;
-color: var(–muted);
-}
-
-.fc-tap-hint {
-position: absolute;
-bottom: 14px;
-right: 18px;
-font-size: 0.7rem;
-color: var(–muted);
-}
-
-.fc-word {
-font-family: ‘Playfair Display’, serif;
-font-size: 2.2rem;
-font-weight: 700;
-color: var(–text);
-word-break: break-word;
-line-height: 1.2;
-}
-
-.fc-meaning {
-font-size: 1.05rem;
-color: var(–accent2);
-margin-top: 16px;
-line-height: 1.6;
-display: none;
-}
-
-.fc-meaning.show { display: block; }
-
-.fc-actions {
-display: flex;
-gap: 12px;
-width: 100%;
-justify-content: center;
-flex-wrap: wrap;
-}
-
-.btn-ok { background: #1a2e1a; border-color: var(–green); color: var(–green); }
-.btn-ok:hover { background: #224022; color: var(–green); }
-.btn-ng { background: #2e1a1a; border-color: var(–red); color: var(–red); }
-.btn-ng:hover { background: #402222; color: var(–red); }
-
-.fc-nav {
-display: flex;
-gap: 12px;
-align-items: center;
-flex-wrap: wrap;
-justify-content: center;
-}
-
-/* ===== LIST MODE ===== */
-#list-mode {
-max-width: 900px;
-margin: 0 auto;
-padding: 0 24px 40px;
-}
-
-.result-info {
-font-size: 0.82rem;
-color: var(–muted);
-margin-bottom: 12px;
-font-family: ‘JetBrains Mono’, monospace;
-}
-
-.word-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-gap: 10px;
-}
-
-.word-card {
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 12px;
-padding: 14px 16px;
-cursor: pointer;
-transition: border-color 0.18s, background 0.18s;
-position: relative;
-}
-
-.word-card:hover { border-color: var(–accent); background: var(–card2); }
-
-.word-card.learned { border-color: #2a5c2a; }
-.word-card.difficult { border-color: #5c2a2a; }
-
-.wc-num {
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 0.65rem;
-color: var(–muted);
-margin-bottom: 4px;
-}
-
-.wc-en {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.15rem;
-font-weight: 700;
-color: var(–text);
-word-break: break-word;
-}
-
-.wc-ja {
-font-size: 0.82rem;
-color: var(–muted);
-margin-top: 6px;
-line-height: 1.55;
-display: none;
-transition: all 0.2s;
-}
-
-.wc-ja.show {
-display: block;
-color: var(–accent2);
-}
-
-.wc-badge {
-position: absolute;
-top: 10px;
-right: 10px;
-width: 8px;
-height: 8px;
-border-radius: 50%;
-background: transparent;
-}
-
-.word-card.learned .wc-badge { background: var(–green); }
-.word-card.difficult .wc-badge { background: var(–red); }
-
-.wc-toggle-btn {
-font-size: 0.7rem;
-color: var(–muted);
-margin-top: 8px;
-cursor: pointer;
-display: inline-block;
-}
-
-.wc-toggle-btn:hover { color: var(–accent); }
-
-/* ===== RANGE INPUT ===== */
-.range-wrap {
+.hdr-stats {
 display: flex;
 gap: 8px;
 align-items: center;
-flex-wrap: wrap;
+flex-wrap: nowrap;
 }
-
-.range-wrap label { font-size: 0.82rem; color: var(–muted); white-space: nowrap; }
-
-.range-wrap input[type=“number”] {
-width: 70px;
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 8px;
-padding: 6px 8px;
-color: var(–text);
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 0.85rem;
-outline: none;
-text-align: center;
-}
-
-.range-wrap input[type=“number”]:focus { border-color: var(–accent); }
-
-/* ===== PAGINATION ===== */
-.pagination {
+.hdr-pill {
 display: flex;
-gap: 6px;
-flex-wrap: wrap;
-margin-top: 20px;
 align-items: center;
-justify-content: center;
-}
-
-.page-btn {
+gap: 4px;
 background: var(–card);
 border: 1px solid var(–border);
+border-radius: 20px;
+padding: 3px 10px;
+font-family: ‘Fira Code’, monospace;
+font-size: 0.72rem;
+color: var(–muted2);
+white-space: nowrap;
+}
+.hdr-pill b { color: var(–accent); }
+.hdr-pill.g b { color: var(–green); }
+.hdr-pill.r b { color: var(–red); }
+.hdr-right { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ===== BUTTONS ===== */
+.btn {
+display: inline-flex;
+align-items: center;
+gap: 5px;
+background: var(–card);
+border: 1px solid var(–border2);
 border-radius: 8px;
-padding: 6px 10px;
-color: var(–muted);
-font-family: ‘JetBrains Mono’, monospace;
-font-size: 0.75rem;
+padding: 7px 14px;
+color: var(–muted2);
+font-family: ‘Noto Sans JP’, sans-serif;
+font-size: 0.82rem;
+cursor: pointer;
+transition: border-color 0.18s, color 0.18s, background 0.18s;
+white-space: nowrap;
+line-height: 1;
+}
+.btn:hover { border-color: var(–accent); color: var(–accent); background: var(–accent-dim); }
+.btn.active { border-color: var(–accent); color: var(–accent); background: var(–accent-dim); }
+.btn-gold {
+background: linear-gradient(135deg, #b8870a, #f0b429);
+border-color: #f0b429;
+color: #1a1000;
+font-weight: 700;
+}
+.btn-gold:hover { opacity: 0.88; color: #1a1000; background: linear-gradient(135deg, #b8870a, #f0b429); border-color: #f0b429; }
+.btn-sm { padding: 4px 10px; font-size: 0.75rem; border-radius: 6px; }
+.btn-ok-sm {
+background: var(–green-dim);
+border-color: var(–green-border);
+color: var(–green);
+font-size: 0.72rem;
+padding: 3px 9px;
+border-radius: 5px;
 cursor: pointer;
 transition: all 0.15s;
-min-width: 34px;
-text-align: center;
+font-family: ‘Noto Sans JP’, sans-serif;
+border: 1px solid var(–green-border);
+white-space: nowrap;
 }
-
-.page-btn:hover, .page-btn.active {
-border-color: var(–accent);
-color: var(–accent);
+.btn-ok-sm:hover, .btn-ok-sm.on { background: rgba(61,214,140,0.22); }
+.btn-ng-sm {
+background: var(–red-dim);
+border-color: var(–red-border);
+color: var(–red);
+font-size: 0.72rem;
+padding: 3px 9px;
+border-radius: 5px;
+cursor: pointer;
+transition: all 0.15s;
+font-family: ‘Noto Sans JP’, sans-serif;
+border: 1px solid var(–red-border);
+white-space: nowrap;
 }
+.btn-ng-sm:hover, .btn-ng-sm.on { background: rgba(255,107,122,0.22); }
 
-.page-btn.active { background: rgba(124,106,247,0.15); }
+/* ===== CONTROLS ===== */
+#controls {
+background: var(–bg2);
+border-bottom: 1px solid var(–border);
+padding: 12px 20px;
+}
+.ctrl-row {
+max-width: 1100px;
+margin: 0 auto;
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+align-items: center;
+}
+.ctrl-row + .ctrl-row { margin-top: 8px; }
 
-/* ===== EMPTY STATE ===== */
-.empty {
-text-align: center;
-padding: 60px 20px;
+.search-box {
+position: relative;
+flex: 1;
+min-width: 180px;
+max-width: 340px;
+}
+.search-box svg {
+position: absolute;
+left: 10px;
+top: 50%;
+transform: translateY(-50%);
 color: var(–muted);
-font-size: 0.9rem;
+pointer-events: none;
+}
+input[type=“text”], select {
+background: var(–card);
+border: 1px solid var(–border2);
+border-radius: 8px;
+padding: 8px 10px;
+color: var(–text);
+font-family: ‘Noto Sans JP’, sans-serif;
+font-size: 0.83rem;
+outline: none;
+transition: border-color 0.18s;
+width: 100%;
+}
+input[type=“text”] { padding-left: 32px; }
+input[type=“text”]:focus, select:focus { border-color: var(–accent); }
+input[type=“text”]::placeholder { color: var(–muted); }
+select { cursor: pointer; appearance: none; -webkit-appearance: none; padding-right: 28px; }
+.select-wrap {
+position: relative;
+min-width: 120px;
+}
+.select-wrap::after {
+content: ‘▾’;
+position: absolute;
+right: 9px;
+top: 50%;
+transform: translateY(-50%);
+color: var(–muted);
+pointer-events: none;
+font-size: 0.8rem;
 }
 
-/* ===== DIVIDER ===== */
-.section-divider {
-border: none;
-border-top: 1px solid var(–border);
-margin: 0 24px;
+/* ===== SECTION SCROLLER ===== */
+#section-bar {
+background: var(–bg2);
+border-bottom: 1px solid var(–border);
+padding: 8px 20px;
+overflow-x: auto;
+white-space: nowrap;
+-webkit-overflow-scrolling: touch;
+}
+#section-bar::-webkit-scrollbar { height: 3px; }
+.sec-btn {
+display: inline-block;
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 4px 10px;
+color: var(–muted2);
+font-family: ‘Fira Code’, monospace;
+font-size: 0.73rem;
+cursor: pointer;
+margin-right: 5px;
+transition: all 0.15s;
+white-space: nowrap;
+user-select: none;
+}
+.sec-btn:hover { border-color: var(–accent); color: var(–accent); }
+.sec-btn.active { border-color: var(–accent); color: var(–accent); background: var(–accent-dim); }
+.sec-btn-all {
+background: var(–card);
+border: 1px solid var(–border2);
+border-radius: 6px;
+padding: 4px 12px;
+color: var(–muted2);
+font-size: 0.73rem;
+cursor: pointer;
+margin-right: 6px;
+transition: all 0.15s;
+font-family: ‘Noto Sans JP’, sans-serif;
+}
+.sec-btn-all:hover, .sec-btn-all.active { border-color: var(–accent); color: var(–accent); background: var(–accent-dim); }
+
+/* ===== STATUS BAR ===== */
+#statusbar {
+max-width: 1100px;
+margin: 10px auto 0;
+padding: 0 20px;
+display: flex;
+align-items: center;
+gap: 10px;
+font-size: 0.78rem;
+color: var(–muted);
+font-family: ‘Fira Code’, monospace;
+}
+
+/* ===== LIST VIEW ===== */
+#list-view {
+max-width: 1100px;
+margin: 0 auto;
+padding: 12px 20px 60px;
+}
+.word-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+gap: 8px;
+margin-top: 8px;
+}
+
+/* ===== WORD CARD ===== */
+.wcard {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 12px 14px;
+cursor: pointer;
+transition: border-color 0.15s, background 0.15s;
+position: relative;
+}
+.wcard:hover { border-color: var(–border2); background: var(–card-hover); }
+.wcard.st-learned { border-left: 3px solid var(–green); }
+.wcard.st-difficult { border-left: 3px solid var(–red); }
+.wc-top {
+display: flex;
+align-items: flex-start;
+gap: 6px;
+margin-bottom: 4px;
+}
+.wc-num {
+font-family: ‘Fira Code’, monospace;
+font-size: 0.65rem;
+color: var(–muted);
+padding-top: 3px;
+flex-shrink: 0;
+}
+.wc-en {
+font-family: ‘Lora’, serif;
+font-size: 1.05rem;
+font-weight: 700;
+color: var(–text);
+word-break: break-word;
+flex: 1;
+line-height: 1.3;
+}
+.wc-dot {
+width: 7px;
+height: 7px;
+border-radius: 50%;
+flex-shrink: 0;
+margin-top: 5px;
+}
+.st-learned .wc-dot { background: var(–green); }
+.st-difficult .wc-dot { background: var(–red); }
+.wcard:not(.st-learned):not(.st-difficult) .wc-dot { background: transparent; border: 1px solid var(–border2); }
+
+.wc-ja {
+font-size: 0.78rem;
+color: var(–muted2);
+line-height: 1.55;
+margin-bottom: 8px;
+display: none;
+}
+.wc-ja.open { display: block; color: #a8b4d0; }
+
+.wc-toggle {
+font-size: 0.68rem;
+color: var(–muted);
+cursor: pointer;
+user-select: none;
+margin-bottom: 8px;
+display: inline-block;
+padding: 2px 0;
+}
+.wc-toggle:hover { color: var(–accent); }
+
+.wc-marks {
+display: flex;
+gap: 6px;
+margin-top: 4px;
 }
 
 /* ===== HIGHLIGHT ===== */
 mark {
-background: rgba(245, 200, 66, 0.25);
+background: rgba(240,180,41,0.22);
 color: var(–gold);
 border-radius: 2px;
 padding: 0 1px;
 }
 
-/* ===== SCROLL BAR ===== */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(–bg); }
-::-webkit-scrollbar-thumb { background: var(–border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(–muted); }
+/* ===== PAGINATION ===== */
+#pagination {
+max-width: 1100px;
+margin: 16px auto 0;
+padding: 0 20px;
+display: flex;
+flex-wrap: wrap;
+gap: 5px;
+align-items: center;
+justify-content: center;
+}
+.pg-btn {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 5px 10px;
+color: var(–muted2);
+font-family: ‘Fira Code’, monospace;
+font-size: 0.73rem;
+cursor: pointer;
+min-width: 32px;
+text-align: center;
+transition: all 0.15s;
+}
+.pg-btn:hover, .pg-btn.active { border-color: var(–accent); color: var(–accent); }
+.pg-btn.active { background: var(–accent-dim); }
+.pg-ellipsis { color: var(–muted); padding: 0 4px; font-size: 0.8rem; }
+
+/* ===== FLASHCARD MODE ===== */
+#fc-overlay {
+display: none;
+position: fixed;
+inset: 0;
+background: var(–bg);
+z-index: 200;
+flex-direction: column;
+}
+#fc-overlay.open { display: flex; }
+#fc-header {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 14px 20px;
+border-bottom: 1px solid var(–border);
+background: var(–bg2);
+flex-shrink: 0;
+}
+.fc-title { font-size: 0.88rem; color: var(–muted2); }
+.fc-stats { display: flex; gap: 10px; margin-left: auto; }
+.fc-counter { font-family: ‘Fira Code’, monospace; font-size: 0.8rem; color: var(–muted2); }
+.fc-sc { font-family: ‘Fira Code’, monospace; font-size: 0.8rem; }
+.fc-sc.g { color: var(–green); }
+.fc-sc.r { color: var(–red); }
+.fc-pbar { height: 3px; background: var(–border); flex-shrink: 0; }
+.fc-pfill { height: 100%; background: linear-gradient(90deg, var(–accent), var(–purple)); transition: width 0.3s; }
+#fc-body {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 30px 20px;
+overflow-y: auto;
+}
+.fc-card {
+width: 100%;
+max-width: 560px;
+background: var(–card);
+border: 1px solid var(–border2);
+border-radius: 16px;
+padding: 44px 36px 36px;
+text-align: center;
+cursor: pointer;
+transition: border-color 0.2s, transform 0.1s;
+position: relative;
+user-select: none;
+}
+.fc-card:active { transform: scale(0.99); }
+.fc-card:hover { border-color: var(–accent); }
+.fc-card-num {
+position: absolute;
+top: 14px;
+left: 18px;
+font-family: ‘Fira Code’, monospace;
+font-size: 0.68rem;
+color: var(–muted);
+}
+.fc-card-hint {
+position: absolute;
+bottom: 14px;
+right: 16px;
+font-size: 0.68rem;
+color: var(–muted);
+}
+.fc-word {
+font-family: ‘Lora’, serif;
+font-size: 2.2rem;
+font-weight: 700;
+color: var(–text);
+word-break: break-word;
+line-height: 1.25;
+margin-bottom: 6px;
+}
+.fc-meaning {
+font-size: 0.95rem;
+color: #a8b4d0;
+margin-top: 18px;
+line-height: 1.65;
+display: none;
+}
+.fc-meaning.show { display: block; }
+.fc-actions {
+display: flex;
+gap: 10px;
+margin-top: 18px;
+justify-content: center;
+flex-wrap: wrap;
+}
+.fc-btn-ok {
+background: var(–green-dim);
+border: 1px solid var(–green-border);
+color: var(–green);
+border-radius: 8px;
+padding: 9px 20px;
+font-size: 0.88rem;
+cursor: pointer;
+font-family: ‘Noto Sans JP’, sans-serif;
+transition: background 0.15s;
+}
+.fc-btn-ok:hover { background: rgba(61,214,140,0.22); }
+.fc-btn-ng {
+background: var(–red-dim);
+border: 1px solid var(–red-border);
+color: var(–red);
+border-radius: 8px;
+padding: 9px 20px;
+font-size: 0.88rem;
+cursor: pointer;
+font-family: ‘Noto Sans JP’, sans-serif;
+transition: background 0.15s;
+}
+.fc-btn-ng:hover { background: rgba(255,107,122,0.22); }
+.fc-nav {
+display: flex;
+gap: 10px;
+margin-top: 16px;
+justify-content: center;
+flex-wrap: wrap;
+}
+.fc-kbd-hint {
+margin-top: 14px;
+font-size: 0.7rem;
+color: var(–muted);
+text-align: center;
+}
+kbd {
+background: var(–card);
+border: 1px solid var(–border2);
+border-radius: 4px;
+padding: 1px 5px;
+font-family: ‘Fira Code’, monospace;
+font-size: 0.7rem;
+color: var(–muted2);
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
-.word-grid { grid-template-columns: 1fr; }
+.word-grid { grid-template-columns: 1fr 1fr; }
 .fc-word { font-size: 1.7rem; }
+.hdr-pill:nth-child(n+3) { display: none; }
+}
+@media (max-width: 420px) {
+.word-grid { grid-template-columns: 1fr; }
 }
 </style>
 
 </head>
 <body>
 
-<header class="header">
-  <div class="header-inner">
-    <div class="logo">鉄壁 <span>Vocabulary</span></div>
-    <div class="header-stats">
-      <div class="stat-pill">総単語数 <strong>2176</strong></div>
-      <div class="stat-pill" id="stat-learned">覚えた <strong id="cnt-learned">0</strong></div>
-      <div class="stat-pill" id="stat-diff">苦手 <strong id="cnt-diff">0</strong></div>
-    </div>
+<!-- HEADER -->
+
+<div id="header">
+  <div class="logo">鉄壁<i>単語帳</i></div>
+  <div class="hdr-stats">
+    <div class="hdr-pill">計 <b>2176</b></div>
+    <div class="hdr-pill g">覚えた <b id="cnt-learned">0</b></div>
+    <div class="hdr-pill r">苦手 <b id="cnt-diff">0</b></div>
   </div>
-</header>
+  <div class="hdr-right">
+    <button class="btn btn-gold" onclick="openFlashcard()">📇 暗記</button>
+  </div>
+</div>
 
 <!-- CONTROLS -->
 
-<div class="controls">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="search" placeholder="英単語・日本語で検索…">
-  </div>
+<div id="controls">
+  <div class="ctrl-row">
+    <!-- Search -->
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search" placeholder="英単語・日本語で検索…">
+    </div>
 
-  <div class="range-wrap">
-    <label>No.</label>
-    <input type="number" id="range-from" value="1" min="1" max="2176">
-    <label>〜</label>
-    <input type="number" id="range-to" value="2176" min="1" max="2176">
-    <button class="btn" onclick="applyRange()">絞込</button>
-  </div>
-
-  <select id="sort-select" onchange="applySort()">
+```
+<!-- Sort -->
+<div class="select-wrap" style="min-width:130px">
+  <select id="sort-sel" onchange="onSort()">
     <option value="asc">番号順</option>
     <option value="alpha">アルファベット順</option>
-    <option value="learned">覚えた順</option>
-    <option value="difficult">苦手順</option>
-    <option value="random">シャッフル</option>
+    <option value="rand">シャッフル</option>
   </select>
+</div>
 
-  <select id="filter-select" onchange="applyFilter()">
-    <option value="all">全て</option>
+<!-- Filter -->
+<div class="select-wrap" style="min-width:120px">
+  <select id="filter-sel" onchange="onFilter()">
+    <option value="all">全て表示</option>
     <option value="learned">覚えた</option>
     <option value="difficult">苦手</option>
     <option value="unmarked">未マーク</option>
   </select>
-
-<button class="btn" id="toggle-all-btn" onclick="toggleAllMeanings()">訳を全表示</button>
-<button class="btn btn-gold" onclick="startFlashcard()">📇 暗記モード</button>
-
 </div>
 
-<hr class="section-divider">
+<!-- Toggle meanings -->
+<button class="btn" id="btn-toggle-all" onclick="toggleAllMeanings()">訳を全表示</button>
+```
 
-<!-- FLASHCARD MODE -->
-
-<div id="flashcard-mode">
-  <div class="fc-progress-bar"><div class="fc-progress-fill" id="fc-progress"></div></div>
-  <div class="fc-counter" id="fc-counter">1 / 1</div>
-  <div class="fc-card" id="fc-card" onclick="fcReveal()">
-    <span class="fc-num" id="fc-num">#1</span>
-    <div class="fc-word" id="fc-word">-</div>
-    <div class="fc-meaning" id="fc-meaning">-</div>
-    <span class="fc-tap-hint">タップして答えを見る</span>
-  </div>
-  <div class="fc-actions" id="fc-actions" style="display:none">
-    <button class="btn btn-ok" onclick="fcMark('learned')">✓ 覚えた</button>
-    <button class="btn" onclick="fcSkip()">→ スキップ</button>
-    <button class="btn btn-ng" onclick="fcMark('difficult')">✗ 苦手</button>
-  </div>
-  <div class="fc-nav">
-    <button class="btn" onclick="fcPrev()">← 前へ</button>
-    <button class="btn" onclick="fcShuffle()">🔀 シャッフル</button>
-    <button class="btn" onclick="exitFlashcard()">✕ 終了</button>
-    <button class="btn" onclick="fcNext()">次へ →</button>
   </div>
 </div>
 
-<!-- LIST MODE -->
+<!-- SECTION BAR -->
 
-<div id="list-mode">
-  <div class="result-info" id="result-info"></div>
+<div id="section-bar"></div>
+
+<!-- STATUS BAR -->
+
+<div id="statusbar">
+  <span id="status-text">読み込み中…</span>
+</div>
+
+<!-- LIST VIEW -->
+
+<div id="list-view">
   <div class="word-grid" id="word-grid"></div>
-  <div class="pagination" id="pagination"></div>
+</div>
+<div id="pagination"></div>
+
+<!-- FLASHCARD OVERLAY -->
+
+<div id="fc-overlay">
+  <div id="fc-header">
+    <span class="fc-title">📇 暗記モード</span>
+<select id="fc-sec-from" style="background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:3px 6px;color:var(--muted2);font-size:0.75rem;cursor:pointer;">
+</select>
+<span style="color:var(--muted);font-size:0.8rem;">〜</span>
+<select id="fc-sec-to" style="background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:3px 6px;color:var(--muted2);font-size:0.75rem;cursor:pointer;">
+</select>
+<button class="btn btn-sm" onclick="fcApplyRange()" style="border-color:var(--accent);color:var(--accent);">適用</button>
+    <span class="fc-counter" id="fc-counter">0 / 0</span>
+    <div class="fc-stats">
+      <span class="fc-sc g">✓ <span id="fc-ok">0</span></span>
+      <span class="fc-sc r">✗ <span id="fc-ng">0</span></span>
+    </div>
+    <button class="btn btn-sm" onclick="closeFlashcard()">✕ 終了</button>
+  </div>
+  <div class="fc-pbar"><div class="fc-pfill" id="fc-pfill" style="width:0%"></div></div>
+  <div id="fc-body">
+    <div class="fc-card" id="fc-card" onclick="fcReveal()">
+      <span class="fc-card-num" id="fc-num">#1</span>
+      <div class="fc-word" id="fc-word">—</div>
+      <div class="fc-meaning" id="fc-meaning">—</div>
+      <span class="fc-card-hint" id="fc-card-hint">タップして答えを見る</span>
+    </div>
+    <div class="fc-actions" id="fc-actions" style="display:none">
+      <button class="fc-btn-ok" onclick="fcMark('learned')">✓ 覚えた</button>
+      <button class="btn" onclick="fcNext()">→ スキップ</button>
+      <button class="fc-btn-ng" onclick="fcMark('difficult')">✗ 苦手</button>
+    </div>
+    <div class="fc-nav">
+      <button class="btn btn-sm" onclick="fcPrev()">← 前へ</button>
+      <button class="btn btn-sm" onclick="fcShuffle()">🔀 シャッフル</button>
+      <button class="btn btn-sm" onclick="fcNext()">次へ →</button>
+    </div>
+    <div class="fc-kbd-hint">
+      <kbd>Space</kbd> 答え表示　<kbd>→</kbd> 次へ　<kbd>O</kbd> 覚えた　<kbd>X</kbd> 苦手　<kbd>Esc</kbd> 終了
+    </div>
+  </div>
 </div>
 
 <script>
-// ============================
-// DATA
-// ============================
+// ===== WORD DATA =====
+</script>
 
-const words = [
+<script>const words_p1 = [
 {id:1,en:"vital",ja:"(～にとって)非常に重要な(to, for～)；生命の"},
 {id:2,en:"vivid",ja:"生き生きとした, 鮮やかな"},
 {id:3,en:"revive",ja:"～を生き返らせる, 生き返る"},
@@ -1565,7 +1661,8 @@ const words = [
 {id:999,en:"nuisance",ja:"迷惑行為、迷惑な人"},
 {id:1000,en:"value",ja:"価値；価値観；～を重んじる"},
 ];
-const words2 = [
+
+const words_p2 = [
 {id:1001,en:"worth",ja:"～の価値のある；価値"},
 {id:1002,en:"deserve",ja:"～に値する"},
 {id:1003,en:"cherish",ja:"～を大事にする"},
@@ -2743,155 +2840,182 @@ const words2 = [
 {id:2175,en:"warrant",ja:"～を保証する；正当化する"},
 {id:2176,en:"mischief",ja:"いたずら、悪さ"},
 ];
-const allWords = [...words, ...words2];
 
+const WORDS = [...words_p1, ...words_p2];</script>
 
-// ============================
-// STATE
-// ============================
-let state = {
-  filter: 'all',
-  sort: 'asc',
+<script>
+// ===== SECTIONS =====
+const SECTIONS = [
+  [1,25],[26,47],[48,86],[87,132],[133,159],[160,191],[192,247],[248,294],[295,332],[333,379],
+  [380,409],[410,435],[436,491],[492,520],[521,574],[575,604],[605,638],[639,674],[675,717],[718,770],
+  [771,809],[810,861],[862,905],[906,951],[952,999],[1000,1041],[1042,1085],[1086,1138],[1139,1191],[1192,1237],
+  [1238,1281],[1282,1346],[1347,1382],[1383,1421],[1422,1470],[1471,1510],[1511,1555],[1556,1602],[1603,1652],[1653,1721],
+  [1722,1779],[1780,1851],[1852,1899],[1900,1933],[1934,1972],[1973,2007],[2008,2047],[2048,2084],[2085,2128],[2129,2176]
+];
+
+// ===== STATE =====
+let S = {
   search: '',
-  rangeFrom: 1,
-  rangeTo: 2176,
-  showAllMeanings: false,
+  sort: 'asc',
+  filter: 'all',
+  section: -1,  // -1 = all
+  showAll: false,
   page: 1,
   perPage: 60,
-  // flashcard
-  fcList: [],
-  fcIndex: 0,
-  fcRevealed: false,
 };
 
-const marks = JSON.parse(localStorage.getItem('teppeki_marks') || '{}');
-
+// ===== MARKS (localStorage) =====
+// Format: { id: 'learned' | 'difficult' }
+// 'learned' stays 'learned' unless explicitly set to 'difficult', and vice versa.
+// No toggle-to-none: clicking same button again does nothing.
+let marks = {};
+try { marks = JSON.parse(localStorage.getItem('tw_marks') || '{}'); } catch(e) { marks = {}; }
 function saveMark(id, type) {
-  if (marks[id] === type) {
-    delete marks[id];
-  } else {
-    marks[id] = type;
-  }
-  localStorage.setItem('teppeki_marks', JSON.stringify(marks));
+  marks[String(id)] = type;  // always overwrite; never delete
+  localStorage.setItem('tw_marks', JSON.stringify(marks));
+  updateStats();
+}
+function getMark(id) { return marks[String(id)] || null; }
+
+function updateStats() {
+  const vals = Object.values(marks);
+  document.getElementById('cnt-learned').textContent = vals.filter(v=>v==='learned').length;
+  document.getElementById('cnt-diff').textContent    = vals.filter(v=>v==='difficult').length;
 }
 
-function getMark(id) { return marks[id] || null; }
+// ===== SECTION BAR BUILD =====
+function buildSectionBar() {
+  const bar = document.getElementById('section-bar');
+  bar.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.className = 'sec-btn-all active';
+  allBtn.id = 'sec-btn-all';
+  allBtn.textContent = 'すべて';
+  allBtn.onclick = () => setSection(-1);
+  bar.appendChild(allBtn);
 
-// ============================
-// FILTER / SORT
-// ============================
+  SECTIONS.forEach(([from, to], i) => {
+    const btn = document.createElement('button');
+    btn.className = 'sec-btn';
+    btn.id = 'sec-btn-' + i;
+    btn.textContent = `§${i+1} ${from}-${to}`;
+    btn.onclick = () => setSection(i);
+    bar.appendChild(btn);
+  });
+}
+
+function setSection(idx) {
+  S.section = idx;
+  S.page = 1;
+  // Update button highlights
+  document.getElementById('sec-btn-all').classList.toggle('active', idx === -1);
+  SECTIONS.forEach((_, i) => {
+    const b = document.getElementById('sec-btn-' + i);
+    if (b) b.classList.toggle('active', i === idx);
+  });
+  render();
+}
+
+// ===== FILTER & SORT =====
 function getFiltered() {
-  let list = allWords.filter(w => {
-    // range
-    if (w.id < state.rangeFrom || w.id > state.rangeTo) return false;
-    // search
-    if (state.search) {
-      const q = state.search.toLowerCase();
-      if (!w.en.toLowerCase().includes(q) && !w.ja.includes(state.search)) return false;
-    }
-    // filter
-    const m = getMark(w.id);
-    if (state.filter === 'learned') return m === 'learned';
-    if (state.filter === 'difficult') return m === 'difficult';
-    if (state.filter === 'unmarked') return !m;
-    return true;
-  });
+  let list = WORDS.slice();
 
-  // sort
-  if (state.sort === 'asc') list.sort((a,b) => a.id - b.id);
-  else if (state.sort === 'alpha') list.sort((a,b) => a.en.localeCompare(b.en));
-  else if (state.sort === 'learned') list.sort((a,b) => {
-    const ma = getMark(a.id) === 'learned' ? -1 : 1;
-    const mb = getMark(b.id) === 'learned' ? -1 : 1;
-    return ma - mb || a.id - b.id;
-  });
-  else if (state.sort === 'difficult') list.sort((a,b) => {
-    const ma = getMark(a.id) === 'difficult' ? -1 : 1;
-    const mb = getMark(b.id) === 'difficult' ? -1 : 1;
-    return ma - mb || a.id - b.id;
-  });
-  else if (state.sort === 'random') list.sort(() => Math.random() - 0.5);
+  // Section filter
+  if (S.section >= 0) {
+    const [from, to] = SECTIONS[S.section];
+    list = list.filter(w => w.id >= from && w.id <= to);
+  }
+
+  // Search
+  if (S.search) {
+    const q = S.search.toLowerCase();
+    list = list.filter(w => w.en.toLowerCase().includes(q) || w.ja.includes(S.search));
+  }
+
+  // Status filter
+  if (S.filter === 'learned')   list = list.filter(w => getMark(w.id) === 'learned');
+  if (S.filter === 'difficult') list = list.filter(w => getMark(w.id) === 'difficult');
+  if (S.filter === 'unmarked')  list = list.filter(w => !getMark(w.id));
+
+  // Sort
+  if (S.sort === 'asc')   list.sort((a,b) => a.id - b.id);
+  if (S.sort === 'alpha') list.sort((a,b) => a.en.localeCompare(b.en));
+  if (S.sort === 'rand')  list.sort(() => Math.random() - 0.5);
 
   return list;
 }
 
-function highlight(text, q) {
+function hl(text, q) {
   if (!q) return text;
-  const ql = q.toLowerCase();
-  const idx = text.toLowerCase().indexOf(ql);
+  const idx = text.toLowerCase().indexOf(q.toLowerCase());
   if (idx < 0) return text;
-  return text.substring(0,idx) + '<mark>' + text.substring(idx, idx+q.length) + '</mark>' + text.substring(idx+q.length);
+  return text.slice(0,idx) + '<mark>' + text.slice(idx, idx+q.length) + '</mark>' + text.slice(idx+q.length);
 }
 
-// ============================
-// RENDER LIST
-// ============================
+// ===== RENDER =====
 function render() {
-  updateStats();
-  const list = getFiltered();
-  const total = list.length;
-  const totalPages = Math.ceil(total / state.perPage) || 1;
-  if (state.page > totalPages) state.page = totalPages;
-  const start = (state.page - 1) * state.perPage;
-  const pageList = list.slice(start, start + state.perPage);
+  const filtered = getFiltered();
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / S.perPage));
+  if (S.page > totalPages) S.page = totalPages;
+  const slice = filtered.slice((S.page-1)*S.perPage, S.page*S.perPage);
 
-  document.getElementById('result-info').textContent = `${total} 件表示中 (全2176語)`;
+  document.getElementById('status-text').textContent =
+    `${total} 語表示 / 全2176語  —  ページ ${S.page} / ${totalPages}`;
 
   const grid = document.getElementById('word-grid');
   grid.innerHTML = '';
 
   if (total === 0) {
-    grid.innerHTML = '<div class="empty">該当する単語が見つかりません</div>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);font-size:0.88rem;">該当する単語がありません</div>';
     document.getElementById('pagination').innerHTML = '';
     return;
   }
 
-  const q = state.search;
-  pageList.forEach(w => {
+  const q = S.search;
+  slice.forEach(w => {
     const m = getMark(w.id);
-    const div = document.createElement('div');
-    div.className = 'word-card' + (m ? ' ' + m : '');
-    div.innerHTML = `
-      <div class="wc-badge"></div>
-      <div class="wc-num">#${w.id}</div>
-      <div class="wc-en">${highlight(w.en, q)}</div>
-      <div class="wc-ja${state.showAllMeanings ? ' show' : ''}" id="ja-${w.id}">${highlight(w.ja, q)}</div>
-      <span class="wc-toggle-btn" onclick="toggleJa(${w.id},event)">▼ 訳を見る</span>
-    `;
-    // mark button area
-    const actions = document.createElement('div');
-    actions.style.cssText = 'display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;';
-    ['learned','difficult'].forEach(type => {
-      const b = document.createElement('button');
-      b.className = 'btn' + (m === type ? (type==='learned'?' btn-ok':' btn-ng') : '');
-      b.style.cssText = 'font-size:0.7rem;padding:4px 8px;border-radius:6px;';
-      b.textContent = type === 'learned' ? '✓ 覚えた' : '✗ 苦手';
-      b.onclick = (e) => {
-        e.stopPropagation();
-        saveMark(w.id, type);
-        render();
-      };
-      actions.appendChild(b);
-    });
-    div.appendChild(actions);
-    div.onclick = (e) => {
-      if (e.target.tagName === 'BUTTON' || e.target.classList.contains('wc-toggle-btn')) return;
-      toggleJa(w.id, e);
-    };
-    grid.appendChild(div);
+    const card = document.createElement('div');
+    card.className = 'wcard' + (m === 'learned' ? ' st-learned' : m === 'difficult' ? ' st-difficult' : '');
+    card.id = 'wcard-' + w.id;
+
+    const jaOpen = S.showAll ? ' open' : '';
+    card.innerHTML =
+      `<div class="wc-top">
+        <span class="wc-num">#${w.id}</span>
+        <span class="wc-en">${hl(w.en, q)}</span>
+        <span class="wc-dot"></span>
+      </div>
+      <div class="wc-ja${jaOpen}" id="ja-${w.id}">${hl(w.ja, q)}</div>
+      <span class="wc-toggle" onclick="toggleJa(${w.id},event)">${S.showAll ? '▲ 閉じる' : '▼ 訳を見る'}</span>
+      <div class="wc-marks">
+        <button class="btn-ok-sm${m==='learned'?' on':''}" onclick="doMark(${w.id},'learned',event)">✓ 覚えた</button>
+        <button class="btn-ng-sm${m==='difficult'?' on':''}" onclick="doMark(${w.id},'difficult',event)">✗ 苦手</button>
+      </div>`;
+    grid.appendChild(card);
   });
 
-  // pagination
   renderPagination(totalPages);
+}
+
+function doMark(id, type, e) {
+  if (e) e.stopPropagation();
+  saveMark(id, type);
+  // Update card styling only
+  const card = document.getElementById('wcard-' + id);
+  if (!card) return;
+  card.className = 'wcard' + (type === 'learned' ? ' st-learned' : ' st-difficult');
+  card.querySelectorAll('.btn-ok-sm').forEach(b => b.classList.toggle('on', type === 'learned'));
+  card.querySelectorAll('.btn-ng-sm').forEach(b => b.classList.toggle('on', type === 'difficult'));
 }
 
 function toggleJa(id, e) {
   if (e) e.stopPropagation();
   const el = document.getElementById('ja-' + id);
   if (!el) return;
-  el.classList.toggle('show');
-  const btn = el.nextElementSibling;
-  if (btn) btn.textContent = el.classList.contains('show') ? '▲ 閉じる' : '▼ 訳を見る';
+  const open = el.classList.toggle('open');
+  const toggle = el.nextElementSibling;
+  if (toggle) toggle.textContent = open ? '▲ 閉じる' : '▼ 訳を見る';
 }
 
 function renderPagination(totalPages) {
@@ -2899,187 +3023,155 @@ function renderPagination(totalPages) {
   pg.innerHTML = '';
   if (totalPages <= 1) return;
 
-  const mkBtn = (label, page, isActive) => {
+  const mk = (label, page) => {
     const b = document.createElement('button');
-    b.className = 'page-btn' + (isActive ? ' active' : '');
+    b.className = 'pg-btn' + (page === S.page ? ' active' : '');
     b.textContent = label;
-    b.onclick = () => { state.page = page; render(); window.scrollTo(0,0); };
+    b.onclick = () => { S.page = page; render(); window.scrollTo(0,120); };
     return b;
   };
+  const ellipsis = () => { const s = document.createElement('span'); s.className='pg-ellipsis'; s.textContent='…'; return s; };
 
-  pg.appendChild(mkBtn('«', 1, false));
-  pg.appendChild(mkBtn('‹', Math.max(1, state.page-1), false));
+  pg.appendChild(mk('«', 1));
+  pg.appendChild(mk('‹', Math.max(1, S.page-1)));
 
-  let pages = [];
-  if (totalPages <= 10) {
-    for (let i=1;i<=totalPages;i++) pages.push(i);
+  if (totalPages <= 9) {
+    for (let i=1; i<=totalPages; i++) pg.appendChild(mk(i, i));
   } else {
-    pages = [1];
-    if (state.page > 4) pages.push('…');
-    for (let i=Math.max(2,state.page-2);i<=Math.min(totalPages-1,state.page+2);i++) pages.push(i);
-    if (state.page < totalPages-3) pages.push('…');
-    pages.push(totalPages);
+    pg.appendChild(mk(1, 1));
+    if (S.page > 4) pg.appendChild(ellipsis());
+    for (let i=Math.max(2,S.page-2); i<=Math.min(totalPages-1,S.page+2); i++) pg.appendChild(mk(i,i));
+    if (S.page < totalPages-3) pg.appendChild(ellipsis());
+    pg.appendChild(mk(totalPages, totalPages));
   }
 
-  pages.forEach(p => {
-    if (p === '…') {
-      const sp = document.createElement('span');
-      sp.textContent = '…'; sp.style.cssText = 'color:var(--muted);padding:0 4px;';
-      pg.appendChild(sp);
-    } else {
-      pg.appendChild(mkBtn(p, p, p === state.page));
-    }
-  });
-
-  pg.appendChild(mkBtn('›', Math.min(totalPages, state.page+1), false));
-  pg.appendChild(mkBtn('»', totalPages, false));
+  pg.appendChild(mk('›', Math.min(totalPages, S.page+1)));
+  pg.appendChild(mk('»', totalPages));
 }
 
-function updateStats() {
-  const learned = Object.values(marks).filter(v => v === 'learned').length;
-  const diff = Object.values(marks).filter(v => v === 'difficult').length;
-  document.getElementById('cnt-learned').textContent = learned;
-  document.getElementById('cnt-diff').textContent = diff;
-}
-
-// ============================
-// CONTROLS
-// ============================
+// ===== CONTROLS =====
 document.getElementById('search').addEventListener('input', function() {
-  state.search = this.value.trim();
-  state.page = 1;
+  S.search = this.value.trim();
+  S.page = 1;
   render();
 });
+function onSort() { S.sort = document.getElementById('sort-sel').value; S.page=1; render(); }
+function onFilter() { S.filter = document.getElementById('filter-sel').value; S.page=1; render(); }
 
-function applyRange() {
-  state.rangeFrom = parseInt(document.getElementById('range-from').value) || 1;
-  state.rangeTo = parseInt(document.getElementById('range-to').value) || 2176;
-  if (state.rangeFrom < 1) state.rangeFrom = 1;
-  if (state.rangeTo > 2176) state.rangeTo = 2176;
-  if (state.rangeFrom > state.rangeTo) state.rangeFrom = state.rangeTo;
-  state.page = 1;
-  render();
-}
-
-function applySort() {
-  state.sort = document.getElementById('sort-select').value;
-  state.page = 1;
-  render();
-}
-
-function applyFilter() {
-  state.filter = document.getElementById('filter-select').value;
-  state.page = 1;
-  render();
-}
-
-let allShowing = false;
+let allShown = false;
 function toggleAllMeanings() {
-  allShowing = !allShowing;
-  state.showAllMeanings = allShowing;
-  document.getElementById('toggle-all-btn').textContent = allShowing ? '訳を全非表示' : '訳を全表示';
-  document.querySelectorAll('.wc-ja').forEach(el => {
-    el.classList.toggle('show', allShowing);
-  });
-  document.querySelectorAll('.wc-toggle-btn').forEach(btn => {
-    btn.textContent = allShowing ? '▲ 閉じる' : '▼ 訳を見る';
-  });
+  allShown = !allShown;
+  S.showAll = allShown;
+  document.getElementById('btn-toggle-all').textContent = allShown ? '訳を全非表示' : '訳を全表示';
+  document.getElementById('btn-toggle-all').classList.toggle('active', allShown);
+  document.querySelectorAll('.wc-ja').forEach(el => el.classList.toggle('open', allShown));
+  document.querySelectorAll('.wc-toggle').forEach(el => { el.textContent = allShown ? '▲ 閉じる' : '▼ 訳を見る'; });
 }
 
-// ============================
-// FLASHCARD MODE
-// ============================
-function startFlashcard() {
-  const list = getFiltered();
-  if (list.length === 0) { alert('表示中の単語がありません'); return; }
-  state.fcList = list;
-  state.fcIndex = 0;
-  state.fcRevealed = false;
-  document.getElementById('list-mode').style.display = 'none';
-  document.getElementById('flashcard-mode').classList.add('visible');
+// ===== FLASHCARD =====
+let fc = { list: [], idx: 0, ok: 0, ng: 0, revealed: false };
+
+function openFlashcard() {
+  fc.list = getFcRangeWords();
+  if (fc.list.length === 0) { alert('表示中の単語がありません'); return; }
+  fc.idx = 0; fc.ok = 0; fc.ng = 0; fc.revealed = false;
+  document.getElementById('fc-overlay').classList.add('open');
   fcShow();
 }
-
-function exitFlashcard() {
-  document.getElementById('flashcard-mode').classList.remove('visible');
-  document.getElementById('list-mode').style.display = '';
-  render();
+function closeFlashcard() {
+  document.getElementById('fc-overlay').classList.remove('open');
+  render(); // refresh marks
 }
-
 function fcShow() {
-  const w = state.fcList[state.fcIndex];
-  if (!w) return;
-  const total = state.fcList.length;
-  const pct = (state.fcIndex / total * 100).toFixed(1);
-  document.getElementById('fc-progress').style.width = pct + '%';
-  document.getElementById('fc-counter').textContent = (state.fcIndex+1) + ' / ' + total;
-  document.getElementById('fc-num').textContent = '#' + w.id;
+  const w = fc.list[fc.idx];
+  const total = fc.list.length;
+  document.getElementById('fc-pfill').style.width = (fc.idx/total*100).toFixed(1)+'%';
+  document.getElementById('fc-counter').textContent = (fc.idx+1)+' / '+total;
+  document.getElementById('fc-ok').textContent = fc.ok;
+  document.getElementById('fc-ng').textContent = fc.ng;
+  document.getElementById('fc-num').textContent = '#'+w.id;
   document.getElementById('fc-word').textContent = w.en;
   document.getElementById('fc-meaning').textContent = w.ja;
   document.getElementById('fc-meaning').classList.remove('show');
   document.getElementById('fc-actions').style.display = 'none';
-  document.getElementById('fc-card').querySelector('.fc-tap-hint').style.display = '';
-  state.fcRevealed = false;
+  document.getElementById('fc-card-hint').textContent = 'タップして答えを見る';
+  fc.revealed = false;
 }
-
 function fcReveal() {
-  if (state.fcRevealed) return;
-  state.fcRevealed = true;
+  if (fc.revealed) return;
+  fc.revealed = true;
   document.getElementById('fc-meaning').classList.add('show');
   document.getElementById('fc-actions').style.display = 'flex';
-  document.getElementById('fc-card').querySelector('.fc-tap-hint').style.display = 'none';
+  document.getElementById('fc-card-hint').textContent = '';
 }
-
 function fcMark(type) {
-  const w = state.fcList[state.fcIndex];
-  if (w) saveMark(w.id, type);
+  const w = fc.list[fc.idx];
+  if (type === 'learned') fc.ok++;
+  else fc.ng++;
+  saveMark(w.id, type);
+  document.getElementById('fc-ok').textContent = fc.ok;
+  document.getElementById('fc-ng').textContent = fc.ng;
   fcNext();
 }
-
-function fcSkip() { fcNext(); }
-
 function fcNext() {
-  if (state.fcIndex < state.fcList.length - 1) {
-    state.fcIndex++;
-    fcShow();
-  } else {
-    // end
-    const done = state.fcList.length;
-    const learned = state.fcList.filter(w => getMark(w.id) === 'learned').length;
-    alert(`完了！ ${done}語中 ${learned}語を「覚えた」にマーク済みです`);
-    exitFlashcard();
+  if (fc.idx < fc.list.length-1) { fc.idx++; fcShow(); }
+  else {
+    alert(`完了！ ${fc.list.length}語中 覚えた:${fc.ok} 苦手:${fc.ng}`);
+    closeFlashcard();
   }
 }
+function fcPrev() { if (fc.idx > 0) { fc.idx--; fcShow(); } }
+function fcShuffle() { fc.list.sort(()=>Math.random()-0.5); fc.idx=0; fcShow(); }
 
-function fcPrev() {
-  if (state.fcIndex > 0) {
-    state.fcIndex--;
-    fcShow();
-  }
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('fc-overlay').classList.contains('open')) return;
+  if (e.key===' '||e.key==='ArrowDown') { e.preventDefault(); fcReveal(); }
+  else if (e.key==='ArrowRight') fcNext();
+  else if (e.key==='ArrowLeft') fcPrev();
+  else if (e.key==='o'||e.key==='O') { if(fc.revealed) fcMark('learned'); }
+  else if (e.key==='x'||e.key==='X') { if(fc.revealed) fcMark('difficult'); }
+  else if (e.key==='Escape') closeFlashcard();
+});
+
+// ===== FLASHCARD RANGE SELECTS =====
+function buildFcRangeSelects() {
+  ['fc-sec-from','fc-sec-to'].forEach((id, isTo) => {
+    const sel = document.getElementById(id);
+    sel.innerHTML = '';
+    SECTIONS.forEach(([from, to], i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `§${i+1}(${from}-${to})`;
+      sel.appendChild(opt);
+    });
+    // デフォルト: fromは0、toは末尾
+    sel.value = isTo ? SECTIONS.length - 1 : 0;
+  });
 }
 
-function fcShuffle() {
-  state.fcList.sort(() => Math.random() - 0.5);
-  state.fcIndex = 0;
+function getFcRangeWords() {
+  const from = parseInt(document.getElementById('fc-sec-from').value);
+  const to   = parseInt(document.getElementById('fc-sec-to').value);
+  const lo = Math.min(from, to);
+  const hi = Math.max(from, to);
+  const idFrom = SECTIONS[lo][0];
+  const idTo   = SECTIONS[hi][1];
+  // 現在のfilter/search条件も維持しつつ、ID範囲で絞る
+  return getFiltered().filter(w => w.id >= idFrom && w.id <= idTo);
+}
+
+function fcApplyRange() {
+  const list = getFcRangeWords();
+  if (list.length === 0) { alert('該当する単語がありません'); return; }
+  fc.list = list;
+  fc.idx = 0; fc.ok = 0; fc.ng = 0; fc.revealed = false;
   fcShow();
 }
 
-// keyboard shortcut
-document.addEventListener('keydown', e => {
-  const fc = document.getElementById('flashcard-mode').classList.contains('visible');
-  if (fc) {
-    if (e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); fcReveal(); }
-    if (e.key === 'ArrowRight') fcNext();
-    if (e.key === 'ArrowLeft') fcPrev();
-    if (e.key === 'o' || e.key === 'O') fcMark('learned');
-    if (e.key === 'x' || e.key === 'X') fcMark('difficult');
-    if (e.key === 'Escape') exitFlashcard();
-  }
-});
-
-// ============================
-// INIT
-// ============================
+// ===== INIT =====
+buildSectionBar();
+buildFcRangeSelects();
+updateStats();
 render();
 </script>
 
