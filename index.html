@@ -618,12 +618,12 @@ color: var(–muted2);
 <div id="fc-overlay">
   <div id="fc-header">
     <span class="fc-title">📇 暗記モード</span>
-<select id="fc-sec-from" style="background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:3px 6px;color:var(--muted2);font-size:0.75rem;cursor:pointer;">
-</select>
-<span style="color:var(--muted);font-size:0.8rem;">〜</span>
-<select id="fc-sec-to" style="background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:3px 6px;color:var(--muted2);font-size:0.75rem;cursor:pointer;">
-</select>
-<button class="btn btn-sm" onclick="fcApplyRange()" style="border-color:var(--accent);color:var(--accent);">適用</button>
+    <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+      <select id="fc-sec-from" style="background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:3px 6px;color:var(--muted2);font-family:'Fira Code',monospace;font-size:0.72rem;cursor:pointer;max-width:130px;"></select>
+      <span style="color:var(--muted);font-size:0.8rem;">〜</span>
+      <select id="fc-sec-to" style="background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:3px 6px;color:var(--muted2);font-family:'Fira Code',monospace;font-size:0.72rem;cursor:pointer;max-width:130px;"></select>
+      <button class="btn btn-sm" onclick="fcApplyRange()" style="border-color:var(--accent);color:var(--accent);flex-shrink:0;">適用</button>
+    </div>
     <span class="fc-counter" id="fc-counter">0 / 0</span>
     <div class="fc-stats">
       <span class="fc-sc g">✓ <span id="fc-ok">0</span></span>
@@ -3132,8 +3132,6 @@ document.addEventListener('keydown', e => {
   else if (e.key==='x'||e.key==='X') { if(fc.revealed) fcMark('difficult'); }
   else if (e.key==='Escape') closeFlashcard();
 });
-
-// ===== FLASHCARD RANGE SELECTS =====
 function buildFcRangeSelects() {
   ['fc-sec-from','fc-sec-to'].forEach((id, isTo) => {
     const sel = document.getElementById(id);
@@ -3144,7 +3142,6 @@ function buildFcRangeSelects() {
       opt.textContent = `§${i+1}(${from}-${to})`;
       sel.appendChild(opt);
     });
-    // デフォルト: fromは0、toは末尾
     sel.value = isTo ? SECTIONS.length - 1 : 0;
   });
 }
@@ -3156,7 +3153,6 @@ function getFcRangeWords() {
   const hi = Math.max(from, to);
   const idFrom = SECTIONS[lo][0];
   const idTo   = SECTIONS[hi][1];
-  // 現在のfilter/search条件も維持しつつ、ID範囲で絞る
   return getFiltered().filter(w => w.id >= idFrom && w.id <= idTo);
 }
 
@@ -3167,10 +3163,9 @@ function fcApplyRange() {
   fc.idx = 0; fc.ok = 0; fc.ng = 0; fc.revealed = false;
   fcShow();
 }
-
 // ===== INIT =====
 buildSectionBar();
-buildFcRangeSelects();
+buildFcRangeSelects(); //
 updateStats();
 render();
 </script>
