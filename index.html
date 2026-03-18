@@ -209,7 +209,7 @@ position: relative;
 min-width: 120px;
 }
 .select-wrap::after {
-content: ‘▾’;
+content: ‘\25be’;
 position: absolute;
 right: 9px;
 top: 50%;
@@ -555,7 +555,7 @@ color: var(–muted2);
     <div class="hdr-pill r">苦手 <b id="cnt-diff">0</b></div>
   </div>
   <div class="hdr-right">
-    <button class="btn btn-gold" onclick="openFlashcard()">📇 暗記</button>
+    <button class="btn btn-gold" onclick="openFlashcard()">&#128199; 暗記</button>
   </div>
 </div>
 
@@ -563,36 +563,26 @@ color: var(–muted2);
 
 <div id="controls">
   <div class="ctrl-row">
-    <!-- Search -->
     <div class="search-box">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input type="text" id="search" placeholder="英単語・日本語で検索…">
     </div>
-
-```
-<!-- Sort -->
-<div class="select-wrap" style="min-width:130px">
-  <select id="sort-sel" onchange="onSort()">
-    <option value="asc">番号順</option>
-    <option value="alpha">アルファベット順</option>
-    <option value="rand">シャッフル</option>
-  </select>
-</div>
-
-<!-- Filter -->
-<div class="select-wrap" style="min-width:120px">
-  <select id="filter-sel" onchange="onFilter()">
-    <option value="all">全て表示</option>
-    <option value="learned">覚えた</option>
-    <option value="difficult">苦手</option>
-    <option value="unmarked">未マーク</option>
-  </select>
-</div>
-
-<!-- Toggle meanings -->
-<button class="btn" id="btn-toggle-all" onclick="toggleAllMeanings()">訳を全表示</button>
-```
-
+    <div class="select-wrap" style="min-width:130px">
+      <select id="sort-sel" onchange="onSort()">
+        <option value="asc">番号順</option>
+        <option value="alpha">アルファベット順</option>
+        <option value="rand">シャッフル</option>
+      </select>
+    </div>
+    <div class="select-wrap" style="min-width:120px">
+      <select id="filter-sel" onchange="onFilter()">
+        <option value="all">全て表示</option>
+        <option value="learned">覚えた</option>
+        <option value="difficult">苦手</option>
+        <option value="unmarked">未マーク</option>
+      </select>
+    </div>
+    <button class="btn" id="btn-toggle-all" onclick="toggleAllMeanings()">訳を全表示</button>
   </div>
 </div>
 
@@ -617,7 +607,7 @@ color: var(–muted2);
 
 <div id="fc-overlay">
   <div id="fc-header">
-    <span class="fc-title">📇 暗記モード</span>
+    <span class="fc-title">&#128199; 暗記モード</span>
     <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
       <select id="fc-sec-from" style="background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:3px 6px;color:var(--muted2);font-family:'Fira Code',monospace;font-size:0.72rem;cursor:pointer;max-width:130px;"></select>
       <span style="color:var(--muted);font-size:0.8rem;">〜</span>
@@ -626,10 +616,10 @@ color: var(–muted2);
     </div>
     <span class="fc-counter" id="fc-counter">0 / 0</span>
     <div class="fc-stats">
-      <span class="fc-sc g">✓ <span id="fc-ok">0</span></span>
-      <span class="fc-sc r">✗ <span id="fc-ng">0</span></span>
+      <span class="fc-sc g">&#10003; <span id="fc-ok">0</span></span>
+      <span class="fc-sc r">&#10007; <span id="fc-ng">0</span></span>
     </div>
-    <button class="btn btn-sm" onclick="closeFlashcard()">✕ 終了</button>
+    <button class="btn btn-sm" onclick="closeFlashcard()">&#10005; 終了</button>
   </div>
   <div class="fc-pbar"><div class="fc-pfill" id="fc-pfill" style="width:0%"></div></div>
   <div id="fc-body">
@@ -640,13 +630,13 @@ color: var(–muted2);
       <span class="fc-card-hint" id="fc-card-hint">タップして答えを見る</span>
     </div>
     <div class="fc-actions" id="fc-actions" style="display:none">
-      <button class="fc-btn-ok" onclick="fcMark('learned')">✓ 覚えた</button>
+      <button class="fc-btn-ok" onclick="fcMark('learned')">&#10003; 覚えた</button>
       <button class="btn" onclick="fcNext()">→ スキップ</button>
-      <button class="fc-btn-ng" onclick="fcMark('difficult')">✗ 苦手</button>
+      <button class="fc-btn-ng" onclick="fcMark('difficult')">&#10007; 苦手</button>
     </div>
     <div class="fc-nav">
       <button class="btn btn-sm" onclick="fcPrev()">← 前へ</button>
-      <button class="btn btn-sm" onclick="fcShuffle()">🔀 シャッフル</button>
+      <button class="btn btn-sm" onclick="fcShuffle()">&#128256; シャッフル</button>
       <button class="btn btn-sm" onclick="fcNext()">次へ →</button>
     </div>
     <div class="fc-kbd-hint">
@@ -654,10 +644,6 @@ color: var(–muted2);
     </div>
   </div>
 </div>
-
-<script>
-// ===== WORD DATA =====
-</script>
 
 <script>const words_p1 = [
 {id:1,en:"vital",ja:"(～にとって)非常に重要な(to, for～)；生命の"},
@@ -1660,9 +1646,9 @@ color: var(–muted2);
 {id:998,en:"bother",ja:"悩ます、迷惑をかける"},
 {id:999,en:"nuisance",ja:"迷惑行為、迷惑な人"},
 {id:1000,en:"value",ja:"価値；価値観；～を重んじる"},
-];
+];</script>
 
-const words_p2 = [
+<script>const words_p2 = [
 {id:1001,en:"worth",ja:"～の価値のある；価値"},
 {id:1002,en:"deserve",ja:"～に値する"},
 {id:1003,en:"cherish",ja:"～を大事にする"},
@@ -2858,20 +2844,17 @@ let S = {
   search: '',
   sort: 'asc',
   filter: 'all',
-  section: -1,  // -1 = all
+  section: -1,
   showAll: false,
   page: 1,
   perPage: 60,
 };
 
 // ===== MARKS (localStorage) =====
-// Format: { id: 'learned' | 'difficult' }
-// 'learned' stays 'learned' unless explicitly set to 'difficult', and vice versa.
-// No toggle-to-none: clicking same button again does nothing.
 let marks = {};
 try { marks = JSON.parse(localStorage.getItem('tw_marks') || '{}'); } catch(e) { marks = {}; }
 function saveMark(id, type) {
-  marks[String(id)] = type;  // always overwrite; never delete
+  marks[String(id)] = type;
   localStorage.setItem('tw_marks', JSON.stringify(marks));
   updateStats();
 }
@@ -2883,7 +2866,7 @@ function updateStats() {
   document.getElementById('cnt-diff').textContent    = vals.filter(v=>v==='difficult').length;
 }
 
-// ===== SECTION BAR BUILD =====
+// ===== SECTION BAR =====
 function buildSectionBar() {
   const bar = document.getElementById('section-bar');
   bar.innerHTML = '';
@@ -2898,7 +2881,7 @@ function buildSectionBar() {
     const btn = document.createElement('button');
     btn.className = 'sec-btn';
     btn.id = 'sec-btn-' + i;
-    btn.textContent = `§${i+1} ${from}-${to}`;
+    btn.textContent = '\u00a7' + (i+1) + ' ' + from + '-' + to;
     btn.onclick = () => setSection(i);
     bar.appendChild(btn);
   });
@@ -2907,7 +2890,6 @@ function buildSectionBar() {
 function setSection(idx) {
   S.section = idx;
   S.page = 1;
-  // Update button highlights
   document.getElementById('sec-btn-all').classList.toggle('active', idx === -1);
   SECTIONS.forEach((_, i) => {
     const b = document.getElementById('sec-btn-' + i);
@@ -2920,24 +2902,20 @@ function setSection(idx) {
 function getFiltered() {
   let list = WORDS.slice();
 
-  // Section filter
   if (S.section >= 0) {
     const [from, to] = SECTIONS[S.section];
     list = list.filter(w => w.id >= from && w.id <= to);
   }
 
-  // Search
   if (S.search) {
     const q = S.search.toLowerCase();
     list = list.filter(w => w.en.toLowerCase().includes(q) || w.ja.includes(S.search));
   }
 
-  // Status filter
   if (S.filter === 'learned')   list = list.filter(w => getMark(w.id) === 'learned');
   if (S.filter === 'difficult') list = list.filter(w => getMark(w.id) === 'difficult');
   if (S.filter === 'unmarked')  list = list.filter(w => !getMark(w.id));
 
-  // Sort
   if (S.sort === 'asc')   list.sort((a,b) => a.id - b.id);
   if (S.sort === 'alpha') list.sort((a,b) => a.en.localeCompare(b.en));
   if (S.sort === 'rand')  list.sort(() => Math.random() - 0.5);
@@ -2961,7 +2939,7 @@ function render() {
   const slice = filtered.slice((S.page-1)*S.perPage, S.page*S.perPage);
 
   document.getElementById('status-text').textContent =
-    `${total} 語表示 / 全2176語  —  ページ ${S.page} / ${totalPages}`;
+    total + ' 語表示 / 全2176語  —  ページ ' + S.page + ' / ' + totalPages;
 
   const grid = document.getElementById('word-grid');
   grid.innerHTML = '';
@@ -2981,17 +2959,17 @@ function render() {
 
     const jaOpen = S.showAll ? ' open' : '';
     card.innerHTML =
-      `<div class="wc-top">
-        <span class="wc-num">#${w.id}</span>
-        <span class="wc-en">${hl(w.en, q)}</span>
-        <span class="wc-dot"></span>
-      </div>
-      <div class="wc-ja${jaOpen}" id="ja-${w.id}">${hl(w.ja, q)}</div>
-      <span class="wc-toggle" onclick="toggleJa(${w.id},event)">${S.showAll ? '▲ 閉じる' : '▼ 訳を見る'}</span>
-      <div class="wc-marks">
-        <button class="btn-ok-sm${m==='learned'?' on':''}" onclick="doMark(${w.id},'learned',event)">✓ 覚えた</button>
-        <button class="btn-ng-sm${m==='difficult'?' on':''}" onclick="doMark(${w.id},'difficult',event)">✗ 苦手</button>
-      </div>`;
+      '<div class="wc-top">' +
+        '<span class="wc-num">#' + w.id + '</span>' +
+        '<span class="wc-en">' + hl(w.en, q) + '</span>' +
+        '<span class="wc-dot"></span>' +
+      '</div>' +
+      '<div class="wc-ja' + jaOpen + '" id="ja-' + w.id + '">' + hl(w.ja, q) + '</div>' +
+      '<span class="wc-toggle" onclick="toggleJa(' + w.id + ',event)">' + (S.showAll ? '▲ 閉じる' : '▼ 訳を見る') + '</span>' +
+      '<div class="wc-marks">' +
+        '<button class="btn-ok-sm' + (m==='learned'?' on':'') + '" onclick="doMark(' + w.id + ',\'learned\',event)">&#10003; 覚えた</button>' +
+        '<button class="btn-ng-sm' + (m==='difficult'?' on':'') + '" onclick="doMark(' + w.id + ',\'difficult\',event)">&#10007; 苦手</button>' +
+      '</div>';
     grid.appendChild(card);
   });
 
@@ -3001,7 +2979,6 @@ function render() {
 function doMark(id, type, e) {
   if (e) e.stopPropagation();
   saveMark(id, type);
-  // Update card styling only
   const card = document.getElementById('wcard-' + id);
   if (!card) return;
   card.className = 'wcard' + (type === 'learned' ? ' st-learned' : ' st-difficult');
@@ -3030,7 +3007,12 @@ function renderPagination(totalPages) {
     b.onclick = () => { S.page = page; render(); window.scrollTo(0,120); };
     return b;
   };
-  const ellipsis = () => { const s = document.createElement('span'); s.className='pg-ellipsis'; s.textContent='…'; return s; };
+  const ellipsis = () => {
+    const s = document.createElement('span');
+    s.className = 'pg-ellipsis';
+    s.textContent = '…';
+    return s;
+  };
 
   pg.appendChild(mk('«', 1));
   pg.appendChild(mk('‹', Math.max(1, S.page-1)));
@@ -3080,7 +3062,7 @@ function openFlashcard() {
 }
 function closeFlashcard() {
   document.getElementById('fc-overlay').classList.remove('open');
-  render(); // refresh marks
+  render();
 }
 function fcShow() {
   const w = fc.list[fc.idx];
@@ -3116,7 +3098,7 @@ function fcMark(type) {
 function fcNext() {
   if (fc.idx < fc.list.length-1) { fc.idx++; fcShow(); }
   else {
-    alert(`完了！ ${fc.list.length}語中 覚えた:${fc.ok} 苦手:${fc.ng}`);
+    alert('完了！ ' + fc.list.length + '語中 覚えた:' + fc.ok + ' 苦手:' + fc.ng);
     closeFlashcard();
   }
 }
@@ -3132,6 +3114,7 @@ document.addEventListener('keydown', e => {
   else if (e.key==='x'||e.key==='X') { if(fc.revealed) fcMark('difficult'); }
   else if (e.key==='Escape') closeFlashcard();
 });
+
 function buildFcRangeSelects() {
   ['fc-sec-from','fc-sec-to'].forEach((id, isTo) => {
     const sel = document.getElementById(id);
@@ -3139,7 +3122,7 @@ function buildFcRangeSelects() {
     SECTIONS.forEach(([from, to], i) => {
       const opt = document.createElement('option');
       opt.value = i;
-      opt.textContent = `§${i+1}(${from}-${to})`;
+      opt.textContent = '\u00a7' + (i+1) + '(' + from + '-' + to + ')';
       sel.appendChild(opt);
     });
     sel.value = isTo ? SECTIONS.length - 1 : 0;
@@ -3163,9 +3146,10 @@ function fcApplyRange() {
   fc.idx = 0; fc.ok = 0; fc.ng = 0; fc.revealed = false;
   fcShow();
 }
+
 // ===== INIT =====
 buildSectionBar();
-buildFcRangeSelects(); //
+buildFcRangeSelects();
 updateStats();
 render();
 </script>
