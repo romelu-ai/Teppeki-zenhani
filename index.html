@@ -54,9 +54,7 @@ body {
 position: sticky;
 top: 0;
 z-index: 100;
-background: rgba(15,17,23,0.96);
-backdrop-filter: blur(12px);
--webkit-backdrop-filter: blur(12px);
+background: #0f1117;
 border-bottom: 1px solid var(–border);
 padding: 0 20px;
 height: 56px;
@@ -407,7 +405,7 @@ z-index: 99999;
 flex-direction: column;
 isolation: isolate;
 }
-#fc-overlay.open { display: flex; }
+
 #fc-header {
 display: flex;
 align-items: center;
@@ -3061,12 +3059,14 @@ function openFlashcard() {
   fc.list = getFcRangeWords();
   if (fc.list.length === 0) { alert('表示中の単語がありません'); return; }
   fc.idx = 0; fc.ok = 0; fc.ng = 0; fc.revealed = false;
-  document.getElementById('fc-overlay').classList.add('open');
+  const ov = document.getElementById('fc-overlay');
+  ov.style.cssText = 'display:flex !important; position:fixed !important; top:0 !important; right:0 !important; bottom:0 !important; left:0 !important; z-index:99999 !important; background:#0f1117 !important; flex-direction:column !important;';
   document.body.style.overflow = 'hidden';
   fcShow();
 }
 function closeFlashcard() {
-  document.getElementById('fc-overlay').classList.remove('open');
+  const ov = document.getElementById('fc-overlay');
+  ov.style.cssText = 'display:none !important;';
   document.body.style.overflow = '';
   render();
 }
@@ -3112,7 +3112,8 @@ function fcPrev() { if (fc.idx > 0) { fc.idx--; fcShow(); } }
 function fcShuffle() { fc.list.sort(()=>Math.random()-0.5); fc.idx=0; fcShow(); }
 
 document.addEventListener('keydown', e => {
-  if (!document.getElementById('fc-overlay').classList.contains('open')) return;
+  const ov = document.getElementById('fc-overlay');
+  if (!ov || ov.style.display === 'none' || ov.style.display === '') return;
   if (e.key===' '||e.key==='ArrowDown') { e.preventDefault(); fcReveal(); }
   else if (e.key==='ArrowRight') fcNext();
   else if (e.key==='ArrowLeft') fcPrev();
