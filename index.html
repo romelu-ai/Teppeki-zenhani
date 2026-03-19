@@ -398,10 +398,14 @@ transition: all 0.15s;
 #fc-overlay {
 display: none;
 position: fixed;
-inset: 0;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
 background: var(–bg);
-z-index: 200;
+z-index: 99999;
 flex-direction: column;
+isolation: isolate;
 }
 #fc-overlay.open { display: flex; }
 #fc-header {
@@ -3058,10 +3062,12 @@ function openFlashcard() {
   if (fc.list.length === 0) { alert('表示中の単語がありません'); return; }
   fc.idx = 0; fc.ok = 0; fc.ng = 0; fc.revealed = false;
   document.getElementById('fc-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
   fcShow();
 }
 function closeFlashcard() {
   document.getElementById('fc-overlay').classList.remove('open');
+  document.body.style.overflow = '';
   render();
 }
 function fcShow() {
@@ -3146,6 +3152,14 @@ function fcApplyRange() {
   fc.idx = 0; fc.ok = 0; fc.ng = 0; fc.revealed = false;
   fcShow();
 }
+
+// ===== Move fc-overlay to body root to escape stacking context =====
+(function() {
+  const ov = document.getElementById('fc-overlay');
+  if (ov && ov.parentNode !== document.body) {
+    document.body.appendChild(ov);
+  }
+})();
 
 // ===== INIT =====
 buildSectionBar();
