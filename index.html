@@ -246,6 +246,51 @@ animation: symbolPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
 </head>
 <body>
 
+<script>
+(function() {
+  var log = [];
+  function show() {
+    var box = document.getElementById('_dbg');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = '_dbg';
+      box.style.cssText = 'position:fixed;top:0;left:0;right:0;max-height:60vh;overflow-y:auto;background:#111;color:#0f0;font-family:monospace;font-size:11px;padding:8px;z-index:9999999;white-space:pre-wrap;border-bottom:2px solid #0f0;';
+      document.body.appendChild(box);
+    }
+    box.textContent = log.join('\n');
+  }
+  function dbg(msg) { log.push(msg); show(); }
+
+  window.onerror = function(msg, src, line, col, err) {
+    dbg('ERROR: ' + msg + ' (line ' + line + ')');
+    if (err && err.stack) dbg(err.stack.split('\n').slice(0,3).join('\n'));
+    return false;
+  };
+  window.addEventListener('unhandledrejection', function(e) {
+    dbg('PROMISE ERR: ' + e.reason);
+  });
+
+  dbg('1. Script tag executed');
+
+  document.addEventListener('DOMContentLoaded', function() {
+    dbg('2. DOMContentLoaded fired');
+    dbg('3. WORDS: ' + (typeof WORDS !== 'undefined' ? WORDS.length : 'UNDEFINED'));
+    dbg('4. SECTIONS: ' + (typeof SECTIONS !== 'undefined' ? SECTIONS.length : 'UNDEFINED'));
+    dbg('5. word-grid: ' + (document.getElementById('word-grid') ? 'OK' : 'NULL'));
+    dbg('6. status-text: ' + (document.getElementById('status-text') ? 'OK' : 'NULL'));
+    dbg('7. render fn: ' + (typeof render));
+    try {
+      dbg('8. calling render()...');
+      render();
+      dbg('9. render() done!');
+    } catch(e) {
+      dbg('RENDER ERROR: ' + e.message);
+      dbg(e.stack ? e.stack.split('\n').slice(0,4).join('\n') : '');
+    }
+  });
+})();
+</script>
+
 <div id="header">
   <div class="logo">鉄壁<i>単語帳</i></div>
   <div class="hdr-stats">
@@ -849,7 +894,7 @@ window.addEventListener('DOMContentLoaded', function() {
   buildSectionBar();
   buildFcRangeSelects();
   updateStats();
-  render();
+  // render() called by debug script
 });
 </script>
 
