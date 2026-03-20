@@ -573,7 +573,7 @@ let marks = {};
 try { marks = JSON.parse(localStorage.getItem('tw_marks') || '{}'); } catch(e) { marks = {}; }
 function saveMark(id, type) {
   marks[String(id)] = type;
-  localStorage.setItem('tw_marks', JSON.stringify(marks));
+  try { localStorage.setItem('tw_marks', JSON.stringify(marks)); } catch(e) {}
   updateStats();
 }
 function getMark(id) { return marks[String(id)] || null; }
@@ -842,15 +842,15 @@ function fcApplyRange() {
   fcShow();
 }
 
-(function(){
+window.addEventListener('DOMContentLoaded', function() {
   const ov=document.getElementById('fc-overlay');
   if(ov&&ov.parentNode!==document.body) document.body.appendChild(ov);
-})();
 
-buildSectionBar();
-buildFcRangeSelects();
-updateStats();
-render();
+  buildSectionBar();
+  buildFcRangeSelects();
+  updateStats();
+  render();
+});
 </script>
 
 </body>
