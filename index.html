@@ -1,22 +1,641 @@
 <!DOCTYPE html>
 
-<html>
-<head><meta charset="UTF-8"></head>
-<body style="background:#111;color:#0f0;font-family:monospace;padding:20px;font-size:16px;">
-<div id="out">start</div>
-<script>
-var o = document.getElementById('out');
-o.textContent = 'step1';
-try {
-  var b = btoa('hello world');
-  o.textContent = 'step2: ' + b;
-  var d = atob(b);
-  o.textContent = 'step3: ' + d;
-  var j = JSON.parse('[{"id":1}]');
-  o.textContent = 'step4: len=' + j.length;
-} catch(e) {
-  o.textContent = 'ERROR: ' + e.message;
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>鉄壁 単語帳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Lora:ital,wght@0,700;1,400&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #0f1117;
+  color: #dde1f0;
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
+:root {
+  --bg: #0f1117;
+  --bg2: #161a27;
+  --card: #1c2035;
+  --card-hover: #222742;
+  --border: #2e3450;
+  --border2: #3a4060;
+  --text: #dde1f0;
+  --muted: #6b748a;
+  --muted2: #8892aa;
+  --accent: #6c8fff;
+  --accent-dim: rgba(108,143,255,0.15);
+  --gold: #f0b429;
+  --gold-dim: rgba(240,180,41,0.15);
+  --red: #ff6b7a;
+  --red-dim: rgba(255,107,122,0.12);
+  --red-border: rgba(255,107,122,0.40);
+  --blue: #6c8fff;
+  --blue-dim: rgba(108,143,255,0.12);
+  --blue-border: rgba(108,143,255,0.45);
+  --purple: #b57bee;
+}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+#header {
+position: sticky; top: 0; z-index: 100;
+background: #0f1117;
+border-bottom: 1px solid var(–border);
+padding: 0 20px; height: 56px;
+display: flex; align-items: center; gap: 14px;
+}
+.logo { font-family: ‘Lora’, serif; font-size: 1.2rem; font-weight: 700; color: var(–gold); white-space: nowrap; flex-shrink: 0; }
+.logo i { font-style: italic; color: var(–accent); font-size: 0.85em; margin-left: 4px; }
+.hdr-stats { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; }
+.hdr-pill {
+display: flex; align-items: center; gap: 4px;
+background: var(–card); border: 1px solid var(–border); border-radius: 20px;
+padding: 3px 10px; font-family: ‘Fira Code’, monospace; font-size: 0.72rem; color: var(–muted2); white-space: nowrap;
+}
+.hdr-pill b { color: var(–accent); }
+.hdr-pill.g b { color: var(–red); }
+.hdr-pill.r b { color: var(–blue); }
+.hdr-right { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
+
+.btn {
+display: inline-flex; align-items: center; gap: 5px;
+background: var(–card); border: 1px solid var(–border2); border-radius: 8px;
+padding: 7px 14px; color: var(–muted2);
+font-family: ‘Noto Sans JP’, sans-serif; font-size: 0.82rem;
+cursor: pointer; transition: border-color 0.18s, color 0.18s, background 0.18s;
+white-space: nowrap; line-height: 1;
+}
+.btn:hover { border-color: var(–accent); color: var(–accent); background: var(–accent-dim); }
+.btn.active { border-color: var(–accent); color: var(–accent); background: var(–accent-dim); }
+.btn-gold {
+background: linear-gradient(135deg, #b8870a, #f0b429);
+border-color: #f0b429; color: #1a1000; font-weight: 700;
+}
+.btn-gold:hover { opacity: 0.88; color: #1a1000; background: linear-gradient(135deg, #b8870a, #f0b429); border-color: #f0b429; }
+.btn-sm { padding: 4px 10px; font-size: 0.75rem; border-radius: 6px; }
+
+/* 覚えた=赤丸, 苦手=青バツ */
+.btn-ok-sm {
+background: var(–red-dim); border: 1px solid var(–red-border); color: var(–red);
+font-size: 0.72rem; padding: 3px 9px; border-radius: 5px; cursor: pointer;
+transition: all 0.15s; font-family: ‘Noto Sans JP’, sans-serif; white-space: nowrap;
+}
+.btn-ok-sm:hover, .btn-ok-sm.on { background: rgba(255,107,122,0.28); }
+.btn-ng-sm {
+background: var(–blue-dim); border: 1px solid var(–blue-border); color: var(–blue);
+font-size: 0.72rem; padding: 3px 9px; border-radius: 5px; cursor: pointer;
+transition: all 0.15s; font-family: ‘Noto Sans JP’, sans-serif; white-space: nowrap;
+}
+.btn-ng-sm:hover, .btn-ng-sm.on { background: rgba(108,143,255,0.28); }
+
+#controls { background: var(–bg2); border-bottom: 1px solid var(–border); padding: 12px 20px; }
+.ctrl-row { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.ctrl-row + .ctrl-row { margin-top: 8px; }
+.search-box { position: relative; flex: 1; min-width: 180px; max-width: 340px; }
+.search-box svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(–muted); pointer-events: none; }
+input[type=“text”], select {
+background: var(–card); border: 1px solid var(–border2); border-radius: 8px;
+padding: 8px 10px; color: var(–text); font-family: ‘Noto Sans JP’, sans-serif;
+font-size: 0.83rem; outline: none; transition: border-color 0.18s; width: 100%;
+}
+input[type=“text”] { padding-left: 32px; }
+input[type=“text”]:focus, select:focus { border-color: var(–accent); }
+input[type=“text”]::placeholder { color: var(–muted); }
+select { cursor: pointer; appearance: none; -webkit-appearance: none; padding-right: 28px; }
+.select-wrap { position: relative; min-width: 120px; }
+.select-wrap::after { content: ‘\25be’; position: absolute; right: 9px; top: 50%; transform: translateY(-50%); color: var(–muted); pointer-events: none; font-size: 0.8rem; }
+
+#section-bar {
+background: var(–bg2); border-bottom: 1px solid var(–border);
+padding: 8px 20px; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;
+}
+#section-bar::-webkit-scrollbar { height: 3px; }
+.sec-btn {
+display: inline-block; background: var(–card); border: 1px solid var(–border);
+border-radius: 6px; padding: 4px 10px; color: var(–muted2);
+font-family: ‘Fira Code’, monospace; font-size: 0.73rem; cursor: pointer;
+margin-right: 5px; transition: all 0.15s; white-space: nowrap; user-select: none;
+}
+.sec-btn:hover { border-color: var(–accent); color: var(–accent); }
+.sec-btn.active { border-color: var(–accent); color: var(–accent); background: var(–accent-dim); }
+.sec-btn-all {
+background: var(–card); border: 1px solid var(–border2); border-radius: 6px;
+padding: 4px 12px; color: var(–muted2); font-size: 0.73rem; cursor: pointer;
+margin-right: 6px; transition: all 0.15s; font-family: ‘Noto Sans JP’, sans-serif;
+}
+.sec-btn-all:hover, .sec-btn-all.active { border-color: var(–accent); color: var(–accent); background: var(–accent-dim); }
+
+#statusbar { max-width: 1100px; margin: 10px auto 0; padding: 0 20px; display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: var(–muted); font-family: ‘Fira Code’, monospace; }
+
+#list-view { max-width: 1100px; margin: 0 auto; padding: 12px 20px 60px; }
+.word-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; margin-top: 8px; }
+
+.wcard {
+background: var(–card); border: 1px solid var(–border); border-radius: 10px;
+padding: 12px 14px; cursor: pointer; transition: border-color 0.15s, background 0.15s; position: relative;
+}
+.wcard:hover { border-color: var(–border2); background: var(–card-hover); }
+.wcard.st-learned { border-left: 3px solid var(–red); }
+.wcard.st-difficult { border-left: 3px solid var(–blue); }
+.wc-top { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px; }
+.wc-num { font-family: ‘Fira Code’, monospace; font-size: 0.65rem; color: var(–muted); padding-top: 3px; flex-shrink: 0; }
+.wc-en { font-family: ‘Lora’, serif; font-size: 1.05rem; font-weight: 700; color: var(–text); word-break: break-word; flex: 1; line-height: 1.3; }
+.wc-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.st-learned .wc-dot { background: var(–red); }
+.st-difficult .wc-dot { background: var(–blue); }
+.wcard:not(.st-learned):not(.st-difficult) .wc-dot { background: transparent; border: 1px solid var(–border2); }
+.wc-ja { font-size: 0.78rem; color: var(–muted2); line-height: 1.55; margin-bottom: 8px; display: none; }
+.wc-ja.open { display: block; color: #a8b4d0; }
+.wc-toggle { font-size: 0.68rem; color: var(–muted); cursor: pointer; user-select: none; margin-bottom: 8px; display: inline-block; padding: 2px 0; }
+.wc-toggle:hover { color: var(–accent); }
+.wc-marks { display: flex; gap: 6px; margin-top: 4px; }
+
+mark { background: rgba(240,180,41,0.22); color: var(–gold); border-radius: 2px; padding: 0 1px; }
+
+#pagination { max-width: 1100px; margin: 16px auto 0; padding: 0 20px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; justify-content: center; }
+.pg-btn { background: var(–card); border: 1px solid var(–border); border-radius: 6px; padding: 5px 10px; color: var(–muted2); font-family: ‘Fira Code’, monospace; font-size: 0.73rem; cursor: pointer; min-width: 32px; text-align: center; transition: all 0.15s; }
+.pg-btn:hover, .pg-btn.active { border-color: var(–accent); color: var(–accent); }
+.pg-btn.active { background: var(–accent-dim); }
+.pg-ellipsis { color: var(–muted); padding: 0 4px; font-size: 0.8rem; }
+
+/* ===== FLASHCARD ===== */
+#fc-overlay {
+display: none; position: fixed; top: 0; right: 0; bottom: 0; left: 0;
+background: var(–bg); z-index: 99999; flex-direction: column; isolation: isolate;
+}
+#fc-header {
+display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+border-bottom: 1px solid var(–border); background: var(–bg2); flex-shrink: 0; flex-wrap: wrap;
+}
+.fc-title { font-size: 0.88rem; color: var(–muted2); white-space: nowrap; flex-shrink: 0; }
+.fc-stats { display: flex; gap: 10px; }
+.fc-counter { font-family: ‘Fira Code’, monospace; font-size: 0.8rem; color: var(–muted2); white-space: nowrap; }
+.fc-sc { font-family: ‘Fira Code’, monospace; font-size: 0.8rem; }
+.fc-sc.g { color: var(–red); }
+.fc-sc.r { color: var(–blue); }
+.fc-pbar { height: 3px; background: var(–border); flex-shrink: 0; }
+.fc-pfill { height: 100%; background: linear-gradient(90deg, var(–accent), var(–purple)); transition: width 0.3s; }
+#fc-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; overflow-y: auto; }
+
+.fc-card {
+width: 100%; max-width: 560px; background: var(–card); border: 1px solid var(–border2);
+border-radius: 16px; padding: 44px 36px 36px; text-align: center; cursor: pointer;
+transition: border-color 0.2s, transform 0.1s; position: relative; user-select: none; overflow: hidden;
+}
+.fc-card:active { transform: scale(0.99); }
+.fc-card:hover { border-color: var(–accent); }
+.fc-card-num { position: absolute; top: 14px; left: 18px; font-family: ‘Fira Code’, monospace; font-size: 0.68rem; color: var(–muted); }
+.fc-card-hint { position: absolute; bottom: 14px; right: 16px; font-size: 0.68rem; color: var(–muted); }
+.fc-word { font-family: ‘Lora’, serif; font-size: 2.2rem; font-weight: 700; color: var(–text); word-break: break-word; line-height: 1.25; margin-bottom: 6px; }
+.fc-meaning { font-size: 0.95rem; color: #a8b4d0; margin-top: 18px; line-height: 1.65; display: none; }
+.fc-meaning.show { display: block; }
+.fc-actions { display: flex; gap: 10px; margin-top: 18px; justify-content: center; flex-wrap: wrap; }
+
+/* FC 覚えた=赤丸, 苦手=青バツ */
+.fc-btn-ok {
+background: var(–red-dim); border: 1px solid var(–red-border); color: var(–red);
+border-radius: 8px; padding: 9px 20px; font-size: 0.88rem; cursor: pointer;
+font-family: ‘Noto Sans JP’, sans-serif; transition: background 0.15s;
+}
+.fc-btn-ok:hover { background: rgba(255,107,122,0.28); }
+.fc-btn-ng {
+background: var(–blue-dim); border: 1px solid var(–blue-border); color: var(–blue);
+border-radius: 8px; padding: 9px 20px; font-size: 0.88rem; cursor: pointer;
+font-family: ‘Noto Sans JP’, sans-serif; transition: background 0.15s;
+}
+.fc-btn-ng:hover { background: rgba(108,143,255,0.28); }
+
+.fc-nav { display: flex; gap: 10px; margin-top: 16px; justify-content: center; flex-wrap: wrap; }
+.fc-kbd-hint { margin-top: 14px; font-size: 0.7rem; color: var(–muted); text-align: center; }
+kbd { background: var(–card); border: 1px solid var(–border2); border-radius: 4px; padding: 1px 5px; font-family: ‘Fira Code’, monospace; font-size: 0.7rem; color: var(–muted2); }
+
+/* ===== MARK FEEDBACK ANIMATION ===== */
+.fc-mark-feedback {
+position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+display: flex; align-items: center; justify-content: center;
+pointer-events: none; opacity: 0; border-radius: 16px; z-index: 10;
+}
+.fc-mark-feedback.show { animation: feedbackFade 0.7s ease-out forwards; }
+.fc-mark-feedback.learned-fb { background: rgba(255,107,122,0.1); }
+.fc-mark-feedback.difficult-fb { background: rgba(108,143,255,0.1); }
+.fc-mark-symbol {
+font-size: 5rem; line-height: 1;
+animation: symbolPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+}
+.fc-mark-feedback.learned-fb .fc-mark-symbol { color: #ff6b7a; }
+.fc-mark-feedback.difficult-fb .fc-mark-symbol { color: #6c8fff; }
+@keyframes feedbackFade { 0%{opacity:1} 60%{opacity:1} 100%{opacity:0} }
+@keyframes symbolPop { 0%{transform:scale(0.2);opacity:0} 60%{transform:scale(1.2);opacity:1} 100%{transform:scale(1);opacity:1} }
+
+@media (max-width: 600px) {
+.word-grid { grid-template-columns: 1fr 1fr; }
+.fc-word { font-size: 1.7rem; }
+.hdr-pill:nth-child(n+3) { display: none; }
+#fc-header { gap: 5px; padding: 8px 10px; }
+}
+@media (max-width: 420px) { .word-grid { grid-template-columns: 1fr; } }
+</style>
+
+</head>
+<body>
+
+<div id="header">
+  <div class="logo">鉄壁<i>単語帳</i></div>
+  <div class="hdr-stats">
+    <div class="hdr-pill">計 <b>2176</b></div>
+    <div class="hdr-pill g">覚えた <b id="cnt-learned">0</b></div>
+    <div class="hdr-pill r">苦手 <b id="cnt-diff">0</b></div>
+  </div>
+  <div class="hdr-right">
+    <button class="btn btn-gold" onclick="openFlashcard()">&#128199; 暗記</button>
+  </div>
+</div>
+
+<div id="controls">
+  <div class="ctrl-row">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search" placeholder="英単語・日本語で検索…">
+    </div>
+    <div class="select-wrap" style="min-width:130px">
+      <select id="sort-sel" onchange="onSort()">
+        <option value="asc">番号順</option>
+        <option value="alpha">アルファベット順</option>
+        <option value="rand">シャッフル</option>
+      </select>
+    </div>
+    <div class="select-wrap" style="min-width:120px">
+      <select id="filter-sel" onchange="onFilter()">
+        <option value="all">全て表示</option>
+        <option value="learned">覚えた</option>
+        <option value="difficult">苦手</option>
+        <option value="unmarked">未マーク</option>
+      </select>
+    </div>
+    <button class="btn" id="btn-toggle-all" onclick="toggleAllMeanings()">訳を全表示</button>
+  </div>
+</div>
+
+<div id="section-bar"></div>
+<div id="statusbar"><span id="status-text">読み込み中…</span></div>
+<div id="list-view"><div class="word-grid" id="word-grid"></div></div>
+<div id="pagination"></div>
+
+<div id="fc-overlay">
+  <div id="fc-header">
+    <span class="fc-title">&#128199; 暗記モード</span>
+    <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
+      <select id="fc-sec-from" style="background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:3px 6px;color:var(--muted2);font-family:'Fira Code',monospace;font-size:0.72rem;cursor:pointer;max-width:120px;"></select>
+      <span style="color:var(--muted);font-size:0.8rem;">〜</span>
+      <select id="fc-sec-to" style="background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:3px 6px;color:var(--muted2);font-family:'Fira Code',monospace;font-size:0.72rem;cursor:pointer;max-width:120px;"></select>
+      <button class="btn btn-sm" onclick="fcApplyRange()" style="border-color:var(--accent);color:var(--accent);flex-shrink:0;">適用</button>
+    </div>
+    <button class="btn btn-sm" onclick="fcRandom50()" style="border-color:var(--purple);color:var(--purple);flex-shrink:0;">🎲 ランダム50問</button>
+    <span class="fc-counter" id="fc-counter">0 / 0</span>
+    <div class="fc-stats">
+      <span class="fc-sc g">○ <span id="fc-ok">0</span></span>
+      <span class="fc-sc r">✕ <span id="fc-ng">0</span></span>
+    </div>
+    <button class="btn btn-sm" onclick="closeFlashcard()" style="flex-shrink:0;">🏠 ホームへ</button>
+  </div>
+  <div class="fc-pbar"><div class="fc-pfill" id="fc-pfill" style="width:0%"></div></div>
+  <div id="fc-body">
+    <div class="fc-card" id="fc-card" onclick="fcReveal()">
+      <div class="fc-mark-feedback" id="fc-feedback"><span class="fc-mark-symbol" id="fc-feedback-symbol"></span></div>
+      <span class="fc-card-num" id="fc-num">#1</span>
+      <div class="fc-word" id="fc-word">—</div>
+      <div class="fc-meaning" id="fc-meaning">—</div>
+      <span class="fc-card-hint" id="fc-card-hint">タップして答えを見る</span>
+    </div>
+    <div class="fc-actions" id="fc-actions" style="display:none">
+      <button class="fc-btn-ok" onclick="fcMark('learned')">○ 覚えた</button>
+      <button class="btn" onclick="fcNext()">→ スキップ</button>
+      <button class="fc-btn-ng" onclick="fcMark('difficult')">✕ 苦手</button>
+    </div>
+    <div class="fc-nav">
+      <button class="btn btn-sm" onclick="fcPrev()">← 前へ</button>
+      <button class="btn btn-sm" onclick="fcShuffle()">&#128256; シャッフル</button>
+      <button class="btn btn-sm" onclick="fcNext()">次へ →</button>
+    </div>
+    <div class="fc-kbd-hint">
+      <kbd>Space</kbd> 答え表示　<kbd>→</kbd> 次へ　<kbd>O</kbd> 覚えた　<kbd>X</kbd> 苦手　<kbd>Esc</kbd> ホームへ
+    </div>
+  </div>
+</div>
+<script>
+var WORDS = [];
+var SECTIONS = [
+  [1,25],[26,47],[48,86],[87,132],[133,159],[160,191],[192,247],[248,294],[295,332],[333,379],
+  [380,409],[410,435],[436,491],[492,520],[521,574],[575,604],[605,638],[639,674],[675,717],[718,770],
+  [771,809],[810,861],[862,905],[906,951],[952,999],[1000,1041],[1042,1085],[1086,1138],[1139,1191],[1192,1237],
+  [1238,1281],[1282,1346],[1347,1382],[1383,1421],[1422,1470],[1471,1510],[1511,1555],[1556,1602],[1603,1652],[1653,1721],
+  [1722,1779],[1780,1851],[1852,1899],[1900,1933],[1934,1972],[1973,2007],[2008,2047],[2048,2084],[2085,2128],[2129,2176]
+];
 </script>
+
+<script>
+
+let S = { search:'', sort:'asc', filter:'all', section:-1, showAll:false, page:1, perPage:60 };
+
+let marks = {};
+try { marks = JSON.parse(localStorage.getItem('tw_marks') || '{}'); } catch(e) { marks = {}; }
+function saveMark(id, type) {
+  marks[String(id)] = type;
+  try { localStorage.setItem('tw_marks', JSON.stringify(marks)); } catch(e) {}
+  updateStats();
+}
+function getMark(id) { return marks[String(id)] || null; }
+function updateStats() {
+  const vals = Object.values(marks);
+  document.getElementById('cnt-learned').textContent = vals.filter(v=>v==='learned').length;
+  document.getElementById('cnt-diff').textContent    = vals.filter(v=>v==='difficult').length;
+}
+
+function buildSectionBar() {
+  const bar = document.getElementById('section-bar');
+  bar.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.className = 'sec-btn-all active';
+  allBtn.id = 'sec-btn-all';
+  allBtn.textContent = '\u3059\u3079\u3066';
+  allBtn.onclick = () => setSection(-1);
+  bar.appendChild(allBtn);
+  SECTIONS.forEach(([from,to],i) => {
+    const btn = document.createElement('button');
+    btn.className = 'sec-btn';
+    btn.id = 'sec-btn-'+i;
+    btn.textContent = '\u00a7'+(i+1)+' '+from+'-'+to;
+    btn.onclick = () => setSection(i);
+    bar.appendChild(btn);
+  });
+}
+function setSection(idx) {
+  S.section = idx; S.page = 1;
+  document.getElementById('sec-btn-all').classList.toggle('active', idx===-1);
+  SECTIONS.forEach((_,i) => { const b=document.getElementById('sec-btn-'+i); if(b) b.classList.toggle('active', i===idx); });
+  render();
+}
+
+function getFiltered() {
+  let list = WORDS.slice();
+  if (S.section >= 0) { const [f,t]=SECTIONS[S.section]; list=list.filter(w=>w.id>=f&&w.id<=t); }
+  if (S.search) { const q=S.search.toLowerCase(); list=list.filter(w=>w.en.toLowerCase().includes(q)||w.ja.includes(S.search)); }
+  if (S.filter==='learned')   list=list.filter(w=>getMark(w.id)==='learned');
+  if (S.filter==='difficult') list=list.filter(w=>getMark(w.id)==='difficult');
+  if (S.filter==='unmarked')  list=list.filter(w=>!getMark(w.id));
+  if (S.sort==='asc')   list.sort((a,b)=>a.id-b.id);
+  if (S.sort==='alpha') list.sort((a,b)=>a.en.localeCompare(b.en));
+  if (S.sort==='rand')  list.sort(()=>Math.random()-0.5);
+  return list;
+}
+function hl(text,q) {
+  if (!q) return text;
+  const idx=text.toLowerCase().indexOf(q.toLowerCase());
+  if (idx<0) return text;
+  return text.slice(0,idx)+'<mark>'+text.slice(idx,idx+q.length)+'</mark>'+text.slice(idx+q.length);
+}
+
+function render() {
+  const filtered=getFiltered(), total=filtered.length;
+  const totalPages=Math.max(1,Math.ceil(total/S.perPage));
+  if (S.page>totalPages) S.page=totalPages;
+  const slice=filtered.slice((S.page-1)*S.perPage, S.page*S.perPage);
+  document.getElementById('status-text').textContent=total+' \u8a9e\u8868\u793a / \u51682176\u8a9e  \u2014  \u30da\u30fc\u30b8 '+S.page+' / '+totalPages;
+  const grid=document.getElementById('word-grid');
+  grid.innerHTML='';
+  if (total===0) {
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);font-size:0.88rem;">\u8a72\u5f53\u3059\u308b\u5358\u8a9e\u304c\u3042\u308a\u307e\u305b\u3093</div>';
+    document.getElementById('pagination').innerHTML='';
+    return;
+  }
+  const q=S.search;
+  slice.forEach(w => {
+    const m=getMark(w.id);
+    const card=document.createElement('div');
+    card.className='wcard'+(m==='learned'?' st-learned':m==='difficult'?' st-difficult':'');
+    card.id='wcard-'+w.id;
+    const jaOpen=S.showAll?' open':'';
+    card.innerHTML=
+      '<div class="wc-top"><span class="wc-num">#'+w.id+'</span><span class="wc-en">'+hl(w.en,q)+'</span><span class="wc-dot"></span></div>'+
+      '<div class="wc-ja'+jaOpen+'" id="ja-'+w.id+'">'+hl(w.ja,q)+'</div>'+
+      '<span class="wc-toggle" onclick="toggleJa('+w.id+',event)">'+(S.showAll?'\u25b2 \u9589\u3058\u308b':'\u25bc \u8a33\u3092\u898b\u308b')+'</span>'+
+      '<div class="wc-marks">'+
+        '<button class="btn-ok-sm'+(m==='learned'?' on':'')+'" onclick="doMark('+w.id+',\'learned\',event)">\u25cb \u899a\u3048\u305f</button>'+
+        '<button class="btn-ng-sm'+(m==='difficult'?' on':'')+'" onclick="doMark('+w.id+',\'difficult\',event)">\u2715 \u82e6\u624b</button>'+
+      '</div>';
+    grid.appendChild(card);
+  });
+  renderPagination(totalPages);
+}
+
+function doMark(id,type,e) {
+  if(e) e.stopPropagation();
+  saveMark(id,type);
+  const card=document.getElementById('wcard-'+id);
+  if(!card) return;
+  card.className='wcard'+(type==='learned'?' st-learned':' st-difficult');
+  card.querySelectorAll('.btn-ok-sm').forEach(b=>b.classList.toggle('on',type==='learned'));
+  card.querySelectorAll('.btn-ng-sm').forEach(b=>b.classList.toggle('on',type==='difficult'));
+}
+function toggleJa(id,e) {
+  if(e) e.stopPropagation();
+  const el=document.getElementById('ja-'+id);
+  if(!el) return;
+  const open=el.classList.toggle('open');
+  const t=el.nextElementSibling;
+  if(t) t.textContent=open?'\u25b2 \u9589\u3058\u308b':'\u25bc \u8a33\u3092\u898b\u308b';
+}
+
+function renderPagination(totalPages) {
+  const pg=document.getElementById('pagination');
+  pg.innerHTML='';
+  if(totalPages<=1) return;
+  const mk=(label,page)=>{
+    const b=document.createElement('button');
+    b.className='pg-btn'+(page===S.page?' active':'');
+    b.textContent=label;
+    b.onclick=()=>{S.page=page;render();window.scrollTo(0,120);};
+    return b;
+  };
+  const ell=()=>{const s=document.createElement('span');s.className='pg-ellipsis';s.textContent='\u2026';return s;};
+  pg.appendChild(mk('\u00ab',1));
+  pg.appendChild(mk('\u2039',Math.max(1,S.page-1)));
+  if(totalPages<=9){for(let i=1;i<=totalPages;i++)pg.appendChild(mk(i,i));}
+  else{
+    pg.appendChild(mk(1,1));
+    if(S.page>4)pg.appendChild(ell());
+    for(let i=Math.max(2,S.page-2);i<=Math.min(totalPages-1,S.page+2);i++)pg.appendChild(mk(i,i));
+    if(S.page<totalPages-3)pg.appendChild(ell());
+    pg.appendChild(mk(totalPages,totalPages));
+  }
+  pg.appendChild(mk('\u203a',Math.min(totalPages,S.page+1)));
+  pg.appendChild(mk('\u00bb',totalPages));
+}
+
+document.getElementById('search').addEventListener('input',function(){S.search=this.value.trim();S.page=1;render();});
+function onSort(){S.sort=document.getElementById('sort-sel').value;S.page=1;render();}
+function onFilter(){S.filter=document.getElementById('filter-sel').value;S.page=1;render();}
+
+let allShown=false;
+function toggleAllMeanings(){
+  allShown=!allShown;S.showAll=allShown;
+  document.getElementById('btn-toggle-all').textContent=allShown?'\u8a33\u3092\u5168\u975e\u8868\u793a':'\u8a33\u3092\u5168\u8868\u793a';
+  document.getElementById('btn-toggle-all').classList.toggle('active',allShown);
+  document.querySelectorAll('.wc-ja').forEach(el=>el.classList.toggle('open',allShown));
+  document.querySelectorAll('.wc-toggle').forEach(el=>{el.textContent=allShown?'\u25b2 \u9589\u3058\u308b':'\u25bc \u8a33\u3092\u898b\u308b';});
+}
+
+// ===== FLASHCARD =====
+let fc = { list:[], idx:0, ok:0, ng:0, revealed:false };
+
+function showFcFeedback(type) {
+  const fb=document.getElementById('fc-feedback');
+  const sym=document.getElementById('fc-feedback-symbol');
+  if(!fb||!sym) return;
+  fb.className='fc-mark-feedback';
+  void fb.offsetWidth;
+  sym.textContent=(type==='learned')?'\u25cb':'\u2715';
+  fb.className='fc-mark-feedback '+(type==='learned'?'learned-fb':'difficult-fb')+' show';
+  setTimeout(()=>{fb.className='fc-mark-feedback';},750);
+}
+
+function fcRandom50() {
+  const all=getFiltered();
+  if(all.length===0){alert('\u8868\u793a\u4e2d\u306e\u5358\u8a9e\u304c\u3042\u308a\u307e\u305b\u3093');return;}
+  const shuffled=all.slice().sort(()=>Math.random()-0.5);
+  fc.list=shuffled.slice(0,Math.min(50,shuffled.length));
+  fc.idx=0;fc.ok=0;fc.ng=0;fc.revealed=false;
+  document.getElementById('fc-ok').textContent=0;
+  document.getElementById('fc-ng').textContent=0;
+  const ov=document.getElementById('fc-overlay');
+  ov.style.cssText='display:flex !important;position:fixed !important;top:0 !important;right:0 !important;bottom:0 !important;left:0 !important;z-index:99999 !important;background:#0f1117 !important;flex-direction:column !important;';
+  document.body.style.overflow='hidden';
+  fcShow();
+}
+
+function openFlashcard() {
+  fc.list=getFcRangeWords();
+  if(fc.list.length===0){alert('\u8868\u793a\u4e2d\u306e\u5358\u8a9e\u304c\u3042\u308a\u307e\u305b\u3093');return;}
+  fc.idx=0;fc.ok=0;fc.ng=0;fc.revealed=false;
+  const ov=document.getElementById('fc-overlay');
+  ov.style.cssText='display:flex !important;position:fixed !important;top:0 !important;right:0 !important;bottom:0 !important;left:0 !important;z-index:99999 !important;background:#0f1117 !important;flex-direction:column !important;';
+  document.body.style.overflow='hidden';
+  fcShow();
+}
+function closeFlashcard() {
+  const ov=document.getElementById('fc-overlay');
+  ov.style.cssText='display:none !important;';
+  document.body.style.overflow='';
+  render();
+}
+function fcShow() {
+  const w=fc.list[fc.idx], total=fc.list.length;
+  document.getElementById('fc-pfill').style.width=(fc.idx/total*100).toFixed(1)+'%';
+  document.getElementById('fc-counter').textContent=(fc.idx+1)+' / '+total;
+  document.getElementById('fc-ok').textContent=fc.ok;
+  document.getElementById('fc-ng').textContent=fc.ng;
+  document.getElementById('fc-num').textContent='#'+w.id;
+  document.getElementById('fc-word').textContent=w.en;
+  document.getElementById('fc-meaning').textContent=w.ja;
+  document.getElementById('fc-meaning').classList.remove('show');
+  document.getElementById('fc-actions').style.display='none';
+  document.getElementById('fc-card-hint').textContent='\u30bf\u30c3\u30d7\u3057\u3066\u7b54\u3048\u3092\u898b\u308b';
+  fc.revealed=false;
+}
+function fcReveal() {
+  if(fc.revealed) return;
+  fc.revealed=true;
+  document.getElementById('fc-meaning').classList.add('show');
+  document.getElementById('fc-actions').style.display='flex';
+  document.getElementById('fc-card-hint').textContent='';
+}
+function fcMark(type) {
+  const w=fc.list[fc.idx];
+  if(type==='learned') fc.ok++; else fc.ng++;
+  showFcFeedback(type);
+  saveMark(w.id,type);
+  document.getElementById('fc-ok').textContent=fc.ok;
+  document.getElementById('fc-ng').textContent=fc.ng;
+  setTimeout(()=>fcNext(),300);
+}
+function fcNext() {
+  if(fc.idx<fc.list.length-1){fc.idx++;fcShow();}
+  else{
+    setTimeout(()=>{
+      alert('\u5b8c\u4e86\uff01 '+fc.list.length+'\u8a9e\u4e2d \u899a\u3048\u305f:'+fc.ok+' \u82e6\u624b:'+fc.ng);
+      closeFlashcard();
+    },200);
+  }
+}
+function fcPrev() { if(fc.idx>0){fc.idx--;fcShow();} }
+function fcShuffle() { fc.list.sort(()=>Math.random()-0.5);fc.idx=0;fcShow(); }
+
+document.addEventListener('keydown', e => {
+  const ov=document.getElementById('fc-overlay');
+  if(!ov||!ov.style.cssText.includes('flex')) return;
+  if(e.key===' '||e.key==='ArrowDown'){e.preventDefault();fcReveal();}
+  else if(e.key==='ArrowRight') fcNext();
+  else if(e.key==='ArrowLeft')  fcPrev();
+  else if(e.key==='o'||e.key==='O'){if(fc.revealed)fcMark('learned');}
+  else if(e.key==='x'||e.key==='X'){if(fc.revealed)fcMark('difficult');}
+  else if(e.key==='Escape') closeFlashcard();
+});
+
+function buildFcRangeSelects() {
+  ['fc-sec-from','fc-sec-to'].forEach((id,isTo) => {
+    const sel=document.getElementById(id);
+    sel.innerHTML='';
+    SECTIONS.forEach(([from,to],i) => {
+      const opt=document.createElement('option');
+      opt.value=i;
+      opt.textContent='\u00a7'+(i+1)+'('+from+'-'+to+')';
+      sel.appendChild(opt);
+    });
+    sel.value=isTo?SECTIONS.length-1:0;
+  });
+}
+function getFcRangeWords() {
+  const from=parseInt(document.getElementById('fc-sec-from').value);
+  const to=parseInt(document.getElementById('fc-sec-to').value);
+  const lo=Math.min(from,to), hi=Math.max(from,to);
+  const idFrom=SECTIONS[lo][0], idTo=SECTIONS[hi][1];
+  return getFiltered().filter(w=>w.id>=idFrom&&w.id<=idTo);
+}
+function fcApplyRange() {
+  const list=getFcRangeWords();
+  if(list.length===0){alert('\u8a72\u5f53\u3059\u308b\u5358\u8a9e\u304c\u3042\u308a\u307e\u305b\u3093');return;}
+  fc.list=list;fc.idx=0;fc.ok=0;fc.ng=0;fc.revealed=false;
+  document.getElementById('fc-ok').textContent=0;
+  document.getElementById('fc-ng').textContent=0;
+  fcShow();
+}
+
+// init via fetch
+</script>
+
+<script>
+fetch('words.json')
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    WORDS = data;
+    var ov = document.getElementById('fc-overlay');
+    if(ov && ov.parentNode !== document.body) document.body.appendChild(ov);
+    buildSectionBar();
+    buildFcRangeSelects();
+    updateStats();
+    render();
+  })
+  .catch(function(e){
+    document.getElementById('status-text').textContent = 'Load error: ' + e.message;
+  });
+</script>
+
 </body>
 </html>
