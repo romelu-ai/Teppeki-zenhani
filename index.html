@@ -1,40 +1,9 @@
 <!DOCTYPE html>
 
-<html lang="ja">
-<head><meta charset="UTF-8"><title>Test</title></head>
-<body style="background:#111;color:#0f0;font-family:monospace;padding:20px;font-size:14px;">
-<pre id="log">Starting...\n</pre>
-<script>
-function log(msg) {
-  document.getElementById('log').textContent += msg + '\n';
-}
-
-log(‘1. Script running’);
-
-try {
-var x = ‘\u3053\u3093\u306b\u3061\u306f’;
-log(’2. Unicode escape OK: ’ + x);
-} catch(e) { log(’2. FAIL: ’ + e); }
-
-try {
-var b = btoa(‘hello’);
-var d = atob(b);
-log(’3. btoa/atob OK: ’ + d);
-} catch(e) { log(’3. FAIL: ’ + e); }
-
-try {
-var j = JSON.parse(’[{“id”:1,“en”:“vital”,“ja”:”\u3053\u3093\u306b\u3061\u306f”}]’);
-log(’4. JSON.parse OK: ’ + j[0].ja);
-} catch(e) { log(’4. FAIL: ’ + e); }
-
-try {
-var testB64 = btoa(unescape(encodeURIComponent(’[{“id”:1,“en”:“test”,“ja”:”\u30c6\u30b9\u30c8”}]’)));
-var testWords = JSON.parse(decodeURIComponent(escape(atob(testB64))));
-log(’5. B64 round-trip OK: ’ + testWords[0].ja);
-} catch(e) { log(’5. FAIL: ’ + e); }
-
-log(‘6. All tests done’);
-</script>
-
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="background:#111;color:#0f0;font-family:monospace;padding:20px;font-size:16px;">
+<div id="out">JS not running</div>
+<script>document.getElementById('out').textContent = 'JS OK: ' + typeof Array;</script>
 </body>
 </html>
