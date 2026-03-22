@@ -38,6 +38,9 @@ body {
   --blue: #6c8fff;
   --blue-dim: rgba(108,143,255,0.12);
   --blue-border: rgba(108,143,255,0.45);
+  --yellow: #f0c040;
+  --yellow-dim: rgba(240,192,64,0.12);
+  --yellow-border: rgba(240,192,64,0.40);
   --purple: #b57bee;
 }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -62,6 +65,7 @@ padding: 3px 10px; font-family: ‘Fira Code’, monospace; font-size: 0.72rem; 
 .hdr-pill b { color: var(–accent); }
 .hdr-pill.g b { color: var(–red); }
 .hdr-pill.r b { color: var(–blue); }
+.hdr-pill.y b { color: var(–yellow); }
 .hdr-right { margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; }
 
 .btn {
@@ -94,6 +98,12 @@ font-size: 0.72rem; padding: 3px 9px; border-radius: 5px; cursor: pointer;
 transition: all 0.15s; font-family: ‘Noto Sans JP’, sans-serif; white-space: nowrap;
 }
 .btn-ng-sm:hover, .btn-ng-sm.on { background: rgba(108,143,255,0.28); }
+.btn-maybe-sm {
+background: var(–yellow-dim); border: 1px solid var(–yellow-border); color: var(–yellow);
+font-size: 0.72rem; padding: 3px 9px; border-radius: 5px; cursor: pointer;
+transition: all 0.15s; font-family: ‘Noto Sans JP’, sans-serif; white-space: nowrap;
+}
+.btn-maybe-sm:hover, .btn-maybe-sm.on { background: rgba(240,192,64,0.28); }
 
 #controls { background: var(–bg2); border-bottom: 1px solid var(–border); padding: 12px 20px; }
 .ctrl-row { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -144,12 +154,14 @@ padding: 12px 14px; cursor: pointer; transition: border-color 0.15s, background 
 .wcard:hover { border-color: var(–border2); background: var(–card-hover); }
 .wcard.st-learned { border-left: 3px solid var(–red); }
 .wcard.st-difficult { border-left: 3px solid var(–blue); }
+.wcard.st-maybe { border-left: 3px solid var(–yellow); }
 .wc-top { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px; }
 .wc-num { font-family: ‘Fira Code’, monospace; font-size: 0.65rem; color: var(–muted); padding-top: 3px; flex-shrink: 0; }
 .wc-en { font-family: ‘Lora’, serif; font-size: 1.05rem; font-weight: 700; color: var(–text); word-break: break-word; flex: 1; line-height: 1.3; }
 .wc-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
 .st-learned .wc-dot { background: var(–red); }
 .st-difficult .wc-dot { background: var(–blue); }
+.st-maybe .wc-dot { background: var(–yellow); }
 .wcard:not(.st-learned):not(.st-difficult) .wc-dot { background: transparent; border: 1px solid var(–border2); }
 .wc-ja { font-size: 0.78rem; color: var(–muted2); line-height: 1.55; margin-bottom: 8px; display: none; }
 .wc-ja.open { display: block; color: #a8b4d0; }
@@ -211,6 +223,12 @@ border-radius: 8px; padding: 9px 20px; font-size: 0.88rem; cursor: pointer;
 font-family: ‘Noto Sans JP’, sans-serif; transition: background 0.15s;
 }
 .fc-btn-ng:hover { background: rgba(108,143,255,0.28); }
+.fc-btn-maybe {
+background: var(–yellow-dim); border: 1px solid var(–yellow-border); color: var(–yellow);
+border-radius: 8px; padding: 9px 20px; font-size: 0.88rem; cursor: pointer;
+font-family: ‘Noto Sans JP’, sans-serif; transition: background 0.15s;
+}
+.fc-btn-maybe:hover { background: rgba(240,192,64,0.28); }
 
 .fc-nav { display: flex; gap: 10px; margin-top: 16px; justify-content: center; flex-wrap: wrap; }
 .fc-kbd-hint { margin-top: 14px; font-size: 0.7rem; color: var(–muted); text-align: center; }
@@ -225,12 +243,14 @@ pointer-events: none; opacity: 0; border-radius: 16px; z-index: 10;
 .fc-mark-feedback.show { animation: feedbackFade 0.7s ease-out forwards; }
 .fc-mark-feedback.learned-fb { background: rgba(255,107,122,0.1); }
 .fc-mark-feedback.difficult-fb { background: rgba(108,143,255,0.1); }
+.fc-mark-feedback.maybe-fb { background: rgba(240,192,64,0.1); }
 .fc-mark-symbol {
 font-size: 5rem; line-height: 1;
 animation: symbolPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
 }
 .fc-mark-feedback.learned-fb .fc-mark-symbol { color: #ff6b7a; }
 .fc-mark-feedback.difficult-fb .fc-mark-symbol { color: #6c8fff; }
+.fc-mark-feedback.maybe-fb .fc-mark-symbol { color: #f0c040; }
 @keyframes feedbackFade { 0%{opacity:1} 60%{opacity:1} 100%{opacity:0} }
 @keyframes symbolPop { 0%{transform:scale(0.2);opacity:0} 60%{transform:scale(1.2);opacity:1} 100%{transform:scale(1);opacity:1} }
 
@@ -241,6 +261,26 @@ animation: symbolPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
 #fc-header { gap: 5px; padding: 8px 10px; }
 }
 @media (max-width: 420px) { .word-grid { grid-template-columns: 1fr; } }
+
+/* ===== WORD LIST MODAL ===== */
+#wlist-modal {
+display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+background: var(–bg); z-index: 99998; flex-direction: column;
+}
+#wlist-modal.open { display: flex; }
+#wlist-header {
+display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+border-bottom: 1px solid var(–border); background: var(–bg2); flex-shrink: 0;
+}
+#wlist-title { font-size: 0.95rem; font-weight: 700; flex: 1; }
+#wlist-body { flex: 1; overflow-y: auto; padding: 12px 16px; }
+.wlist-item {
+display: flex; align-items: flex-start; gap: 10px;
+padding: 10px 0; border-bottom: 1px solid var(–border);
+}
+.wlist-num { font-family: ‘Fira Code’, monospace; font-size: 0.68rem; color: var(–muted); padding-top: 3px; flex-shrink: 0; }
+.wlist-en { font-family: ‘Lora’, serif; font-size: 1rem; font-weight: 700; color: var(–text); min-width: 120px; }
+.wlist-ja { font-size: 0.78rem; color: var(–muted2); line-height: 1.5; }
 </style>
 
 </head>
@@ -250,10 +290,12 @@ animation: symbolPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
   <div class="logo">鉄壁<i>単語帳</i></div>
   <div class="hdr-stats">
     <div class="hdr-pill">計 <b>2176</b></div>
-    <div class="hdr-pill g">覚えた <b id="cnt-learned">0</b></div>
-    <div class="hdr-pill r">苦手 <b id="cnt-diff">0</b></div>
+    <div class="hdr-pill g" onclick="openWordList('learned')" style="cursor:pointer;" title="一覧を見る">覚えた <b id="cnt-learned">0</b></div>
+    <div class="hdr-pill y" onclick="openWordList('maybe')" style="cursor:pointer;" title="一覧を見る">微妙 <b id="cnt-maybe">0</b></div>
+    <div class="hdr-pill r" onclick="openWordList('difficult')" style="cursor:pointer;" title="一覧を見る">苦手 <b id="cnt-diff">0</b></div>
   </div>
   <div class="hdr-right">
+    <a href="polysemy.html" class="btn" style="text-decoration:none;">&#128218; 多義語</a>
     <button class="btn btn-gold" onclick="openFlashcard()">&#128199; 暗記</button>
   </div>
 </div>
@@ -275,6 +317,7 @@ animation: symbolPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
       <select id="filter-sel" onchange="onFilter()">
         <option value="all">全て表示</option>
         <option value="learned">覚えた</option>
+        <option value="maybe">微妙</option>
         <option value="difficult">苦手</option>
         <option value="unmarked">未マーク</option>
       </select>
@@ -301,6 +344,7 @@ animation: symbolPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
     <span class="fc-counter" id="fc-counter">0 / 0</span>
     <div class="fc-stats">
       <span class="fc-sc g">○ <span id="fc-ok">0</span></span>
+      <span class="fc-sc" style="color:var(--yellow)">? <span id="fc-maybe">0</span></span>
       <span class="fc-sc r">✕ <span id="fc-ng">0</span></span>
     </div>
     <button class="btn btn-sm" onclick="closeFlashcard()" style="flex-shrink:0;">🏠 ホームへ</button>
@@ -316,6 +360,7 @@ animation: symbolPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
     </div>
     <div class="fc-actions" id="fc-actions" style="display:none">
       <button class="fc-btn-ok" onclick="fcMark('learned')">○ 覚えた</button>
+      <button class="fc-btn-maybe" onclick="fcMark('maybe')">? 微妙</button>
       <button class="btn" onclick="fcNext()">→ スキップ</button>
       <button class="fc-btn-ng" onclick="fcMark('difficult')">✕ 苦手</button>
     </div>
@@ -355,7 +400,8 @@ function getMark(id) { return marks[String(id)] || null; }
 function updateStats() {
   const vals = Object.values(marks);
   document.getElementById('cnt-learned').textContent = vals.filter(v=>v==='learned').length;
-  document.getElementById('cnt-diff').textContent    = vals.filter(v=>v==='difficult').length;
+  document.getElementById('cnt-maybe').textContent = vals.filter(v=>v==='maybe').length;
+  document.getElementById('cnt-diff').textContent = vals.filter(v=>v==='difficult').length;
 }
 
 function buildSectionBar() {
@@ -388,6 +434,7 @@ function getFiltered() {
   if (S.section >= 0) { const [f,t]=SECTIONS[S.section]; list=list.filter(w=>w.id>=f&&w.id<=t); }
   if (S.search) { const q=S.search.toLowerCase(); list=list.filter(w=>w.en.toLowerCase().includes(q)||w.ja.includes(S.search)); }
   if (S.filter==='learned')   list=list.filter(w=>getMark(w.id)==='learned');
+  if (S.filter==='maybe')     list=list.filter(w=>getMark(w.id)==='maybe');
   if (S.filter==='difficult') list=list.filter(w=>getMark(w.id)==='difficult');
   if (S.filter==='unmarked')  list=list.filter(w=>!getMark(w.id));
   if (S.sort==='asc')   list.sort((a,b)=>a.id-b.id);
@@ -419,7 +466,7 @@ function render() {
   slice.forEach(w => {
     const m=getMark(w.id);
     const card=document.createElement('div');
-    card.className='wcard'+(m==='learned'?' st-learned':m==='difficult'?' st-difficult':'');
+    card.className='wcard'+(m==='learned'?' st-learned':m==='difficult'?' st-difficult':m==='maybe'?' st-maybe':'');
     card.id='wcard-'+w.id;
     const jaOpen=S.showAll?' open':'';
     card.innerHTML=
@@ -428,6 +475,7 @@ function render() {
       '<span class="wc-toggle" onclick="toggleJa('+w.id+',event)">'+(S.showAll?'\u25b2 \u9589\u3058\u308b':'\u25bc \u8a33\u3092\u898b\u308b')+'</span>'+
       '<div class="wc-marks">'+
         '<button class="btn-ok-sm'+(m==='learned'?' on':'')+'" onclick="doMark('+w.id+',\'learned\',event)">\u25cb \u899a\u3048\u305f</button>'+
+        '<button class="btn-maybe-sm'+(m==='maybe'?' on':'')+'" onclick="doMark('+w.id+',\'maybe\',event)">\u003f \u5fae\u5999</button>'+
         '<button class="btn-ng-sm'+(m==='difficult'?' on':'')+'" onclick="doMark('+w.id+',\'difficult\',event)">\u2715 \u82e6\u624b</button>'+
       '</div>';
     grid.appendChild(card);
@@ -440,8 +488,9 @@ function doMark(id,type,e) {
   saveMark(id,type);
   const card=document.getElementById('wcard-'+id);
   if(!card) return;
-  card.className='wcard'+(type==='learned'?' st-learned':' st-difficult');
+  card.className='wcard'+(type==='learned'?' st-learned':type==='difficult'?' st-difficult':' st-maybe');
   card.querySelectorAll('.btn-ok-sm').forEach(b=>b.classList.toggle('on',type==='learned'));
+  card.querySelectorAll('.btn-maybe-sm').forEach(b=>b.classList.toggle('on',type==='maybe'));
   card.querySelectorAll('.btn-ng-sm').forEach(b=>b.classList.toggle('on',type==='difficult'));
 }
 function toggleJa(id,e) {
@@ -511,8 +560,9 @@ function fcRandom50() {
   if(all.length===0){alert('\u8a72\u5f53\u3059\u308b\u5358\u8a9e\u304c\u3042\u308a\u307e\u305b\u3093');return;}
   const shuffled=all.slice().sort(()=>Math.random()-0.5);
   fc.list=shuffled.slice(0,Math.min(50,shuffled.length));
-  fc.idx=0;fc.ok=0;fc.ng=0;fc.revealed=false;
+  fc.idx=0;fc.ok=0;fc.maybe=0;fc.ng=0;fc.revealed=false;
   document.getElementById('fc-ok').textContent=0;
+  document.getElementById('fc-maybe').textContent=0;
   document.getElementById('fc-ng').textContent=0;
   const ov=document.getElementById('fc-overlay');
   ov.style.cssText='display:flex !important;position:fixed !important;top:0 !important;right:0 !important;bottom:0 !important;left:0 !important;z-index:99999 !important;background:#0f1117 !important;flex-direction:column !important;';
@@ -523,7 +573,7 @@ function fcRandom50() {
 function openFlashcard() {
   fc.list=getFcRangeWords();
   if(fc.list.length===0){alert('\u8868\u793a\u4e2d\u306e\u5358\u8a9e\u304c\u3042\u308a\u307e\u305b\u3093');return;}
-  fc.idx=0;fc.ok=0;fc.ng=0;fc.revealed=false;
+  fc.idx=0;fc.ok=0;fc.maybe=0;fc.ng=0;fc.revealed=false;
   const ov=document.getElementById('fc-overlay');
   ov.style.cssText='display:flex !important;position:fixed !important;top:0 !important;right:0 !important;bottom:0 !important;left:0 !important;z-index:99999 !important;background:#0f1117 !important;flex-direction:column !important;';
   document.body.style.overflow='hidden';
@@ -558,10 +608,13 @@ function fcReveal() {
 }
 function fcMark(type) {
   const w=fc.list[fc.idx];
-  if(type==='learned') fc.ok++; else fc.ng++;
+  if(type==='learned') fc.ok++;
+  else if(type==='maybe') fc.maybe=(fc.maybe||0)+1;
+  else fc.ng++;
   showFcFeedback(type);
   saveMark(w.id,type);
   document.getElementById('fc-ok').textContent=fc.ok;
+  document.getElementById('fc-maybe').textContent=fc.maybe||0;
   document.getElementById('fc-ng').textContent=fc.ng;
   setTimeout(()=>fcNext(),300);
 }
@@ -576,6 +629,31 @@ function fcNext() {
 }
 function fcPrev() { if(fc.idx>0){fc.idx--;fcShow();} }
 function fcShuffle() { fc.list.sort(()=>Math.random()-0.5);fc.idx=0;fcShow(); }
+
+function openWordList(type) {
+  const typeLabel = type==='learned' ? '\u899a\u3048\u305f' : type==='maybe' ? '\u5fae\u5999' : '\u82e6\u624b';
+  const color = type==='learned' ? 'var(--red)' : type==='maybe' ? 'var(--yellow)' : 'var(--blue)';
+  const list = WORDS.filter(w=>getMark(w.id)===type);
+  document.getElementById('wlist-title').innerHTML = '<span style="color:'+color+'">'+typeLabel+'</span> \u5358\u8a9e\u4e00\u89a7 ('+list.length+'\u8a9e)';
+  const body = document.getElementById('wlist-body');
+  if(list.length===0){
+    body.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted);font-size:0.88rem;">\u8a72\u5f53\u3059\u308b\u5358\u8a9e\u304c\u3042\u308a\u307e\u305b\u3093</div>';
+  } else {
+    body.innerHTML = list.map(w=>
+      '<div class="wlist-item">'+
+      '<span class="wlist-num">#'+w.id+'</span>'+
+      '<span class="wlist-en">'+w.en+'</span>'+
+      '<span class="wlist-ja">'+w.ja+'</span>'+
+      '</div>'
+    ).join('');
+  }
+  document.getElementById('wlist-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeWordList() {
+  document.getElementById('wlist-modal').classList.remove('open');
+  document.body.style.overflow='';
+}
 
 document.addEventListener('keydown', e => {
   const ov=document.getElementById('fc-overlay');
@@ -611,8 +689,9 @@ function getFcRangeWords() {
 function fcApplyRange() {
   const list=getFcRangeWords();
   if(list.length===0){alert('\u8a72\u5f53\u3059\u308b\u5358\u8a9e\u304c\u3042\u308a\u307e\u305b\u3093');return;}
-  fc.list=list;fc.idx=0;fc.ok=0;fc.ng=0;fc.revealed=false;
+  fc.list=list;fc.idx=0;fc.ok=0;fc.maybe=0;fc.ng=0;fc.revealed=false;
   document.getElementById('fc-ok').textContent=0;
+  document.getElementById('fc-maybe').textContent=0;
   document.getElementById('fc-ng').textContent=0;
   fcShow();
 }
@@ -636,6 +715,14 @@ fetch('words.json')
     document.getElementById('status-text').textContent = 'Load error: ' + e.message;
   });
 </script>
+
+<div id="wlist-modal">
+  <div id="wlist-header">
+    <span id="wlist-title">単語一覧</span>
+    <button class="btn btn-sm" onclick="closeWordList()">✕ 閉じる</button>
+  </div>
+  <div id="wlist-body"></div>
+</div>
 
 </body>
 </html>
