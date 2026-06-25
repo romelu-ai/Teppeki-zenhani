@@ -544,6 +544,96 @@ function toggleAllMeanings(){
 // ===== FLASHCARD =====
 let fc = { list:[], idx:0, ok:0, ng:0, revealed:false };
 
+// ---- セッション永続化 ----
+const FC_SAVE_KEY = 'tw_fc_session';
+
+function fcSaveSession() {
+  if (!fc.list || fc.list.length === 0) return;
+  const payload = {
+    listIds: fc.list.map(w => w.id),
+    idx: fc.idx,
+    ok: fc.ok,
+    maybe: fc.maybe || 0,
+    ng: fc.ng,
+    ts: Date.now()
+  };
+  try { localStorage.setItem(FC_SAVE_KEY, JSON.stringify(payload)); } catch(e) {}
+}
+
+function fcClearSession() {
+  try { localStorage.removeItem(FC_SAVE_KEY); } catch(e) {}
+}
+
+function fcHasSavedSession() {
+  try {
+    const raw = localStorage.getItem(FC_SAVE_KEY);
+    if (!raw) return false;
+    const d = JSON.parse(raw);
+    // 24時間以内のセッションのみ有効
+    return d && d.listIds && d.listIds.length > 0 && (Date.now() - d.ts) < 86400000;
+  } catch(e) { return false; }
+}
+
+function fcRestoreSession() {
+  try {
+    const d = JSON.parse(localStorage.getItem(FC_SAVE_KEY));
+    if (!d || !WORDS || WORDS.length === 0) return false;
+    const idMap = {};
+    WORDS.forEach(w => { idMap[w.id] = w; });
+    const list = d.listIds.map(id => idMap[id]).filter(Boolean);
+    if (list.length === 0) return false;
+    fc.list = list;
+    fc.idx = Math.min(d.idx, list.length - 1);
+    fc.ok = d.ok || 0;
+    fc.maybe = d.maybe || 0;
+    fc.ng = d.ng || 0;
+    fc.revealed = false;
+    return true;
+  } catch(e) { return false; }
+}
+
+function showRestoreBanner() {
+  if (!fcHasSavedSession()) return;
+  try {
+    const d = JSON.parse(localStorage.getItem(FC_SAVE_KEY));
+    const elapsed = Math.round((Date.now() - d.ts) / 60000);
+    const timeLabel = elapsed < 60 ? elapsed + '分前' : Math.round(elapsed/60) + '時間前';
+    const progress = d.idx + 1;
+    const total = d.listIds.length;
+    let banner = document.getElementById('fc-restore-banner');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'fc-restore-banner';
+      banner.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;background:#1c2035;border:1px solid var(--accent);border-radius:12px;padding:12px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,0.5);max-width:90vw;font-size:0.84rem;';
+      document.body.appendChild(banner);
+    }
+    banner.innerHTML =
+      '<span style="color:var(--muted2)">📖 前回の暗記セッション（' + timeLabel + '、' + progress + '/' + total + '語）を再開しますか？</span>' +
+      '<button onclick="fcDoRestore()" style="background:var(--accent-dim);border:1px solid var(--accent);color:var(--accent);border-radius:7px;padding:5px 13px;cursor:pointer;font-size:0.8rem;white-space:nowrap;">再開する</button>' +
+      '<button onclick="fcDismissRestore()" style="background:var(--card);border:1px solid var(--border2);color:var(--muted2);border-radius:7px;padding:5px 10px;cursor:pointer;font-size:0.8rem;">✕</button>';
+    banner.style.display = 'flex';
+  } catch(e) {}
+}
+
+function fcDoRestore() {
+  fcDismissRestore();
+  if (fcRestoreSession()) {
+    const ov = document.getElementById('fc-overlay');
+    ov.style.cssText = 'display:flex !important;position:fixed !important;top:0 !important;right:0 !important;bottom:0 !important;left:0 !important;z-index:99999 !important;background:#0f1117 !important;flex-direction:column !important;';
+    document.body.style.overflow = 'hidden';
+    document.getElementById('fc-ok').textContent = fc.ok;
+    document.getElementById('fc-maybe').textContent = fc.maybe || 0;
+    document.getElementById('fc-ng').textContent = fc.ng;
+    fcShow();
+  }
+}
+
+function fcDismissRestore() {
+  const b = document.getElementById('fc-restore-banner');
+  if (b) b.style.display = 'none';
+  fcClearSession();
+}
+
 function showFcFeedback(type) {
   const fb=document.getElementById('fc-feedback');
   const sym=document.getElementById('fc-feedback-symbol');
@@ -564,6 +654,7 @@ function fcRandom50() {
   document.getElementById('fc-ok').textContent=0;
   document.getElementById('fc-maybe').textContent=0;
   document.getElementById('fc-ng').textContent=0;
+  fcSaveSession();
   const ov=document.getElementById('fc-overlay');
   ov.style.cssText='display:flex !important;position:fixed !important;top:0 !important;right:0 !important;bottom:0 !important;left:0 !important;z-index:99999 !important;background:#0f1117 !important;flex-direction:column !important;';
   document.body.style.overflow='hidden';
@@ -574,6 +665,7 @@ function openFlashcard() {
   fc.list=getFcRangeWords();
   if(fc.list.length===0){alert('\u8868\u793a\u4e2d\u306e\u5358\u8a9e\u304c\u3042\u308a\u307e\u305b\u3093');return;}
   fc.idx=0;fc.ok=0;fc.maybe=0;fc.ng=0;fc.revealed=false;
+  fcSaveSession();
   const ov=document.getElementById('fc-overlay');
   ov.style.cssText='display:flex !important;position:fixed !important;top:0 !important;right:0 !important;bottom:0 !important;left:0 !important;z-index:99999 !important;background:#0f1117 !important;flex-direction:column !important;';
   document.body.style.overflow='hidden';
@@ -583,6 +675,11 @@ function closeFlashcard() {
   const ov=document.getElementById('fc-overlay');
   ov.style.cssText='display:none !important;';
   document.body.style.overflow='';
+  // セッションはそのまま保持（再開バナーを次回表示するため）
+  // ただし途中で意図的に閉じた場合も再開できるよう保存しておく
+  if (fc.list && fc.list.length > 0 && fc.idx < fc.list.length - 1) {
+    fcSaveSession();
+  }
   render();
 }
 function fcShow() {
@@ -616,19 +713,21 @@ function fcMark(type) {
   document.getElementById('fc-ok').textContent=fc.ok;
   document.getElementById('fc-maybe').textContent=fc.maybe||0;
   document.getElementById('fc-ng').textContent=fc.ng;
+  fcSaveSession();
   setTimeout(()=>fcNext(),300);
 }
 function fcNext() {
-  if(fc.idx<fc.list.length-1){fc.idx++;fcShow();}
+  if(fc.idx<fc.list.length-1){fc.idx++;fcSaveSession();fcShow();}
   else{
+    fcClearSession();
     setTimeout(()=>{
       alert('\u5b8c\u4e86\uff01 '+fc.list.length+'\u8a9e\u4e2d \u899a\u3048\u305f:'+fc.ok+' \u82e6\u624b:'+fc.ng);
       closeFlashcard();
     },200);
   }
 }
-function fcPrev() { if(fc.idx>0){fc.idx--;fcShow();} }
-function fcShuffle() { fc.list.sort(()=>Math.random()-0.5);fc.idx=0;fcShow(); }
+function fcPrev() { if(fc.idx>0){fc.idx--;fcSaveSession();fcShow();} }
+function fcShuffle() { fc.list.sort(()=>Math.random()-0.5);fc.idx=0;fcSaveSession();fcShow(); }
 
 function openWordList(type) {
   const typeLabel = type==='learned' ? '\u899a\u3048\u305f' : type==='maybe' ? '\u5fae\u5999' : '\u82e6\u624b';
@@ -693,6 +792,7 @@ function fcApplyRange() {
   document.getElementById('fc-ok').textContent=0;
   document.getElementById('fc-maybe').textContent=0;
   document.getElementById('fc-ng').textContent=0;
+  fcSaveSession();
   fcShow();
 }
 
@@ -710,6 +810,7 @@ fetch('words.json')
     buildFcRangeSelects();
     updateStats();
     render();
+    showRestoreBanner();
   })
   .catch(function(e){
     document.getElementById('status-text').textContent = 'Load error: ' + e.message;
